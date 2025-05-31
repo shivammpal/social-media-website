@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bookmarks - Connect</title>
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-main: #0e0e0e;
+      --glass-bg: rgba(255, 255, 255, 0.1);
+      --glass-border: rgba(255, 255, 255, 0.2);
+      --accent-color: #00ffff;
+      --shadow-color: rgba(0, 255, 255, 0.2);
+    }
+
+    /* Global Background with Animated Overlays */
+    body {
+      font-family: 'Roboto', sans-serif;
+      background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+      color: #ddd;
+      margin: 0;
+      padding: 0;
+      overflow-x: hidden;
+      position: relative;
+    }
+    body::before,
+    body::after {
+      content: "";
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -2;
+      opacity: 0.3;
+      background-repeat: no-repeat;
+      background-size: cover;
+      animation: animateBg 20s linear infinite;
+    }
+    body::before {
+      background: radial-gradient(circle at 30% 30%, rgba(0,255,255,0.2), transparent 70%);
+    }
+    body::after {
+      background: radial-gradient(circle at 70% 70%, rgba(255,0,255,0.2), transparent 70%);
+      animation-direction: reverse;
+    }
+    @keyframes animateBg {
+      0% { transform: translate(0,0); }
+      50% { transform: translate(-50px,50px); }
+      100% { transform: translate(0,0); }
+    }
+
+    /* Jarvis-Inspired Overlay */
+    .jarvis-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: -3;
+      background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='800' height='600' viewBox='0 0 800 600'><defs><pattern id='circuit' x='0' y='0' width='40' height='40' patternUnits='userSpaceOnUse'><path d='M0 20 L20 0 L40 20 L20 40 Z' fill='none' stroke='%2300ffff' stroke-width='0.5'/><path d='M20 0 L20 40' stroke='%2300ffff' stroke-width='0.5'/><path d='M0 20 L40 20' stroke='%2300ffff' stroke-width='0.5'/></pattern></defs><rect width='800' height='600' fill='url(%23circuit)'/></svg>") repeat;
+      animation: jarvisMove 15s linear infinite;
+      opacity: 0.5;
+    }
+    @keyframes jarvisMove {
+      0% { transform: translate(0, 0) scale(1); }
+      50% { transform: translate(-50px, 50px) scale(1.05); }
+      100% { transform: translate(0, 0) scale(1); }
+    }
+
+    /* Animation for changing color effect on college name */
+    @keyframes colorChange {
+      0%   { color: #00ffff; }
+      25%  { color: #ff00ff; }
+      50%  { color: #ffff00; }
+      75%  { color: #00ff00; }
+      100% { color: #00ffff; }
+    }
+
+    /* Upper Navigation Bar */
+    .upper-nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      background: rgba(14, 14, 14, 0.9);
+      padding: 10px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      z-index: 1200;
+      border-bottom: 1px solid var(--glass-border);
+    }
+    .upper-nav .brand {
+      display: flex;
+      align-items: center;
+    }
+    .upper-nav .brand img.logo {
+      width: 40px;
+      height: 40px;
+      margin-right: 8px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 1px solid #ccc;
+      filter: drop-shadow(0 0 3px var(--accent-color));
+    }
+    .upper-nav .brand span {
+      font-family: 'Orbitron', sans-serif;
+      color: var(--accent-color);
+      font-size: 1.2rem;
+      font-weight: 700;
+      text-shadow: 0 0 8px var(--accent-color);
+    }
+    .upper-nav .nav-links {
+      display: flex;
+      align-items: center;
+    }
+    .upper-nav .nav-links a {
+      color: var(--accent-color);
+      font-size: 1.5rem;
+      text-decoration: none;
+      margin: 0 15px;
+      transition: color 0.3s ease;
+    }
+    .upper-nav .nav-links a:hover {
+      color: #fff;
+    }
+    .upper-nav {
+      background: var(--bg-main) !important;
+    }
+    .college-info {
+      display: inline-flex;
+      align-items: center;
+      background: var(--glass-bg);
+      padding: 4px 8px;
+      border-radius: 4px;
+      border: 1px solid var(--glass-border);
+      backdrop-filter: blur(5px);
+    }
+    .college-info #collegeNameDisplay {
+      font-weight: 500;
+      margin-left: 5px;
+      animation: colorChange 3s infinite;
+    }
+
+    /* Left Vertical Navigation Sidebar */
+    .side-nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 200px;
+      height: 100vh;
+      background: rgba(14, 14, 14, 0.85);
+      border-radius: 0 15px 15px 0;
+      z-index: 1100;
+      padding: 20px 0;
+      overflow-y: auto;
+      border-right: 1px solid var(--glass-border);
+    }
+    .side-nav a.nav-item {
+      display: flex;
+      align-items: center;
+      text-decoration: none;
+      color: var(--accent-color);
+      font-size: 1rem;
+      padding: 10px 20px;
+      transition: background 0.3s ease, transform 0.3s ease;
+    }
+    .side-nav a.nav-item i {
+      font-size: 1.5rem;
+      min-width: 30px;
+      text-align: center;
+      margin-right: 15px;
+    }
+    .side-nav a.nav-item:hover {
+      background: rgba(0, 255, 255, 0.15);
+      transform: scale(1.05);
+      border-radius: 0 15px 15px 0;
+    }
+    .side-nav a.nav-item:hover i {
+      filter: drop-shadow(0 0 8px var(--accent-color));
+    }
+    .side-nav {
+      background: var(--bg-main) !important;
+    }
+
+    /* Container for Bookmarks Page Content */
+    .container {
+      margin-top: 80px;   /* space for upper nav */
+      margin-left: 200px; /* space for side nav */
+      margin-right: 20px;
+      margin-bottom: 60px;
+      padding: 20px;
+    }
+    .favorites-heading {
+      text-align: center;
+      margin-bottom: 20px;
+      color: var(--accent-color);
+    }
+
+    /* Horizontal Scrolling Bookmarks Container */
+    #bookmarksContainer {
+      display: block;
+      padding: 10px 0;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    /* Post styling (vertical stacked) */
+    #bookmarksContainer .post {
+      background: var(--bg-main) !important;
+      padding: 15px;
+      border-radius: 10px;
+      box-shadow: 0 2px 15px var(--shadow-color);
+      border-color: var(--glass-border);
+      transition: transform 0.3s ease;
+      width: 100%;
+      margin-bottom: 20px;
+    }
+    #bookmarksContainer .post:hover {
+      transform: translateY(-5px);
+    }
+    /* post actions on hover */
+    #bookmarksContainer .post-actions i:hover {
+      transform: scale(1.2);
+      color: var(--accent-color);
+    }
+    /* Username style to match home page */
+    #bookmarksContainer .post-header .username {
+      font-family: 'Orbitron', sans-serif;
+      font-weight: 700;
+      color: var(--accent-color);
+    }
+  </style>
+</head>
+<body>
+  <!-- Jarvis Overlay (Futuristic Background) -->
+  <div class="jarvis-overlay"></div>
+
+  <!-- Upper Navigation Bar -->
+  <div class="upper-nav">
+    <div class="brand">
+      <img src="l11.jpg" alt="Logo" class="logo" />
+      <span>UniVerse</span>
+    </div>
+    <div class="nav-links">
+      <a href="notification.html" title="Notifications"><i class="fas fa-bell"></i></a>
+      <a href="profile.html" title="Profile"><i class="fas fa-user-circle"></i></a>
+      <span class="college-info">College: <span id="collegeNameDisplay"></span></span>
+    </div>
+  </div>
+
+  <!-- Sidebar -->
+  <div class="side-nav">
+    <a href="home.html" title="Home" class="nav-item" id="homeLink">
+      <i class="fas fa-home"></i>
+      <span>Home</span>
+    </a>
+    <a href="home.html" title="Home" class="nav-item" id="homeLink">
+      <i class="fas fa-home"></i>
+      <span>Home</span>
+    </a>
+    <a href="search.html" title="Find" class="nav-item">
+      <i class="fas fa-search"></i>
+      <span>Find</span>
+    </a>
+    <a href="chat.html" title="Gossips" class="nav-item">
+      <i class="fas fa-comments"></i>
+      <span>Gossips</span>
+    </a>
+    <a href="reel.html" title="Snippets" class="nav-item">
+      <i class="fas fa-clapperboard"></i>
+      <span>Snippets</span>
+    </a>
+    <a href="profile.html" title="Profile" class="nav-item">
+      <i class="fas fa-user-circle"></i>
+      <span>Profile</span>
+    </a>
+    <a href="bookmark.html" title="Highlights" class="nav-item">
+      <i class="fas fa-bookmark"></i>
+      <span>Highlights</span>
+    </a>
+    <a href="archive.html" title="Archive" class="nav-item">
+      <i class="fas fa-box-archive"></i>
+      <span>Archive</span>
+    </a>
+    <a href="notes.html" title="Notes" class="nav-item">
+      <i class="fas fa-file-alt"></i>
+      <span>Notes</span>
+    </a>
+    
+  </div>
+
+  <!-- Bookmarks Page Content -->
+  <div class="container">
+    <h2 class="favorites-heading">Favorites</h2>
+    <div id="bookmarksContainer">
+      <!-- Bookmarked posts will appear here horizontally -->
+    </div>
+  </div>
+  
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const collegeName = localStorage.getItem("collegeName");
+      document.getElementById("collegeNameDisplay").textContent = collegeName || "Unknown College";
+  
+      const container = document.getElementById("bookmarksContainer");
+      const bookmarkedPosts = JSON.parse(localStorage.getItem("bookmarkedPosts")) || [];
+      const bookmarks = JSON.parse(localStorage.getItem("bookmarks")) || [];
+  
+      if (bookmarkedPosts.length === 0) {
+        container.innerHTML = "<p class='text-center text-muted'>Oops you have not saved any posts!!</p>";
+      } else {
+        bookmarkedPosts.forEach(post => {
+          container.appendChild(createPostElement(post));
+        });
+      }
+    });
+  
+    function createPostElement(postObj) {
+      const post = document.createElement("div");
+      post.className = "post";
+      post.id = postObj.id;
+  
+      const mediaHTML = postObj.mediaType && postObj.mediaType.startsWith("video")
+        ? `<video controls class="img-fluid rounded"><source src="${postObj.mediaURL}" type="${postObj.mediaType}"></video>`
+        : `<img src="${postObj.mediaURL}" class="img-fluid rounded" alt="Post Media" />`;
+  
+      post.innerHTML = `
+        <div class="post-header d-flex justify-content-between">
+          <span class="username">@${postObj.username}</span>
+          <span class="delete-post" style="cursor:pointer;"><i class="far fa-trash-alt"></i></span>
+        </div>
+        <div class="post-media">${mediaHTML}</div>
+        <div class="post-caption"><p>${postObj.caption || ""}</p></div>
+        <div class="post-tags"><p>${postObj.tags || ""}</p></div>
+        <div class="post-actions d-flex justify-content-between align-items-center mt-2">
+          <div class="post-left-actions">
+            <i class="far fa-heart me-3"></i>
+            <i class="far fa-comment me-3"></i>
+            <i class="far fa-download me-3"></i>
+            <i class="far fa-share-square"></i>
+          </div>
+          <div class="post-right-action">
+            <i class="fas fa-bookmark"></i>
+          </div>
+        </div>
+      `;
+  
+      post.querySelector(".fa-bookmark").addEventListener("click", () => {
+        let bookmarkedPosts = JSON.parse(localStorage.getItem("bookmarkedPosts")) || [];
+        let bookmarks = JSON.parse(localStorage.getItem("bookmarks")) || [];
+  
+        const idx = bookmarks.indexOf(postObj.id);
+        if (idx !== -1) {
+          bookmarks.splice(idx, 1);
+          bookmarkedPosts = bookmarkedPosts.filter(p => p.id !== postObj.id);
+          post.remove();
+        }
+  
+        localStorage.setItem("bookmarks", JSON.stringify(bookmarks));
+        localStorage.setItem("bookmarkedPosts", JSON.stringify(bookmarkedPosts));
+  
+        if (bookmarkedPosts.length === 0) {
+          document.getElementById("bookmarksContainer").innerHTML = "<p class='text-center text-muted'>Oops you have not saved any posts!!</p>";
+        }
+      });
+  
+      // Add event listeners for like, comment, download, share
+      const likeIcon = post.querySelector(".fa-heart");
+      likeIcon.addEventListener("click", () => {
+        likeIcon.classList.toggle("fas");
+        likeIcon.classList.toggle("far");
+        likeIcon.style.color = likeIcon.classList.contains("fas") ? "red" : "";
+      });
+  
+      post.querySelector(".fa-comment").addEventListener("click", () => {
+        // Open comment modal or alert for now (implement modal if exists)
+        alert("Comment feature coming soon!");
+      });
+  
+      post.querySelector(".fa-download").addEventListener("click", () => {
+        const img = post.querySelector("img");
+        const video = post.querySelector("video");
+        const src = img ? img.src : (video ? video.querySelector("source").src : "");
+        if (src) {
+          const a = document.createElement("a");
+          a.href = src;
+          a.download = "media";
+          document.body.appendChild(a);
+          a.click();
+          document.body.removeChild(a);
+        }
+      });
+  
+      post.querySelector(".fa-share-square").addEventListener("click", () => {
+        const img = post.querySelector("img");
+        const video = post.querySelector("video");
+        const src = img ? img.src : (video ? video.querySelector("source").src : "");
+        if (navigator.share) {
+          navigator.share({ title: "Check out this post!", url: src }).catch(console.error);
+        } else {
+          // Fallback: copy link to clipboard
+          navigator.clipboard.writeText(src).then(() => {
+            alert("Post link copied to clipboard!");
+          });
+        }
+      });
+  
+      return post;
+    }
+  </script>
+  
+    
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Connect Login & Registration</title>
+  <style>
+    /* ======== Global Body & Background ======== */
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+      margin: 0;
+      height: 100vh;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      perspective: 1000px;
+      position: relative;
+    }
+    /* Animated Background Overlays */
+    body::before,
+    body::after {
+      content: "";
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      z-index: -1;
+      opacity: 0.3;
+      background-repeat: no-repeat;
+      background-size: cover;
+      animation: animateBg 20s linear infinite;
+    }
+    body::before {
+      background: radial-gradient(circle at 30% 30%, rgba(0, 255, 255, 0.2), transparent 70%);
+    }
+    body::after {
+      background: radial-gradient(circle at 70% 70%, rgba(255, 0, 255, 0.2), transparent 70%);
+      animation-direction: reverse;
+    }
+    @keyframes animateBg {
+      0% { transform: translate(0, 0); }
+      50% { transform: translate(-50px, 50px); }
+      100% { transform: translate(0, 0); }
+    }
+
+    /* ======== Main Wrapper ======== */
+    .main-wrapper {
+      display: flex;
+      width: 100%;
+      height: 100%;
+      position: relative;
+    }
+    .left-panel, .right-panel {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+    .left-panel {
+      flex-direction: column;
+    }
+
+    /* ======== Welcome Message ======== */
+    .welcome-message {
+      text-align: center;
+      color: #e0ffff;
+    }
+    .line-container {
+      position: relative;
+      margin: 0 auto 15px;
+      text-align: center;
+      white-space: nowrap;
+      overflow: hidden;
+    }
+    .typewriter-text {
+      display: inline-block;
+    }
+    .title-line {
+      width: 19ch;
+      clip-path: inset(0 19ch 0 0);
+      animation: reveal-title 2s steps(19, end) forwards;
+      font-size: 60px;
+      font-weight: bold;
+    }
+    .line-2 {
+      width: 33ch;
+      clip-path: inset(0 33ch 0 0);
+      animation: reveal-line2 2.5s steps(33, end) forwards;
+      font-size: 28px;
+    }
+    .line-3 {
+      width: 18ch;
+      clip-path: inset(0 18ch 0 0);
+      animation: reveal-line3 1s steps(18, end) forwards;
+      font-size: 28px;
+    }
+    .line-4 {
+      width: 8ch;
+      clip-path: inset(0 8ch 0 0);
+      animation: reveal-line4 1s steps(8, end) forwards;
+      font-size: 28px;
+    }
+    .title-line { animation-delay: 0s; }
+    .line-2    { animation-delay: 2.5s; }
+    .line-3    { animation-delay: 5s; }
+    .line-4    { animation-delay: 6s; }
+    @keyframes reveal-title {
+      0%   { clip-path: inset(0 19ch 0 0); }
+      100% { clip-path: inset(0 0 0 0); }
+    }
+    @keyframes reveal-line2 {
+      0%   { clip-path: inset(0 33ch 0 0); }
+      100% { clip-path: inset(0 0 0 0); }
+    }
+    @keyframes reveal-line3 {
+      0%   { clip-path: inset(0 18ch 0 0); }
+      100% { clip-path: inset(0 0 0 0); }
+    }
+    @keyframes reveal-line4 {
+      0%   { clip-path: inset(0 8ch 0 0); }
+      100% { clip-path: inset(0 0 0 0); }
+    }
+
+    /* ======== Container (CARD) for the Forms ======== */
+    .container {
+      background: rgba(255, 255, 255, 0.1);
+      /* Added blur effect for background behind the form */
+      padding: 40px;
+      border-radius: 16px;
+      width: 320px;
+      text-align: center;
+      transition: box-shadow 0.6s ease, transform 0.6s ease;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      transform: translateZ(-20px);
+    }
+    .container:hover {
+      transform: scale(1.03) translateZ(0);
+      box-shadow: 0 40px 80px rgba(0, 0, 0, 0.4);
+    }
+
+    /* ======== Header Section ======== */
+    .header-section {
+      margin-bottom: 20px;
+    }
+    .header-icon {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      object-fit: cover;
+      margin-bottom: 10px;
+      border: 2px solid rgba(0, 255, 255, 0.8);
+      box-shadow: 0 0 10px rgba(0, 255, 255, 0.5);
+    }
+    .header-title {
+      margin: 0;
+      font-size: 26px;
+      color: #e0ffff;
+      text-shadow: 0 0 8px rgba(0, 255, 255, 0.8);
+    }
+
+    /* ======== Forms ======== */
+    .form {
+      display: none;
+      transition: opacity 0.3s ease;
+    }
+    .form.active {
+      display: block;
+    }
+
+    /* ======== Input Fields ======== */
+    input[type="text"],
+    input[type="password"],
+    select {
+      width: 100%;
+      padding: 12px;
+      margin: 10px 0;
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.05);
+      color: #e0ffff;
+      box-sizing: border-box;
+      outline: none;
+      transition: border 0.3s ease;
+    }
+    input[type="text"]::placeholder,
+    input[type="password"]::placeholder {
+      color: rgba(224, 255, 255, 0.6);
+    }
+    input[type="text"]:focus,
+    input[type="password"]:focus,
+    select:focus {
+      border-color: rgba(0, 255, 255, 0.8);
+    }
+    select {
+      background: rgba(0, 0, 0, 0.3);
+      color: #e0ffff;
+    }
+    .username-input {
+      pattern: "^@.+$";
+      title: "Username must start with @";
+    }
+
+    /* ======== Buttons ======== */
+    button {
+      background-color: rgba(0, 255, 255, 0.8);
+      color: #0c0413;
+      border: none;
+      padding: 12px;
+      cursor: pointer;
+      width: 100%;
+      border-radius: 8px;
+      font-size: 16px;
+      transition: background-color 0.3s ease, box-shadow 0.3s ease;
+    }
+    button:hover {
+      background-color: rgba(0, 255, 255, 1);
+      box-shadow: 0 0 10px rgba(0, 255, 255, 0.8);
+    }
+
+    /* ======== Toggle Text ======== */
+    .toggle-text {
+      margin-top: 20px;
+      font-size: 14px;
+      color: #a3e8ff;
+      cursor: pointer;
+      text-shadow: 0 0 5px rgba(0, 255, 255, 0.6);
+    }
+    .toggle-text strong {
+      color: #e0ffff;
+      text-shadow: 0 0 8px rgba(0, 255, 255, 0.8);
+    }
+  </style>
+  <!-- ======== Tony Stark Jarvis Inspired Overlay ======== -->
+  <style>
+    .jarvis-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: -3;
+      background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='800' height='600' viewBox='0 0 800 600'><defs><pattern id='circuit' x='0' y='0' width='40' height='40' patternUnits='userSpaceOnUse'><path d='M0 20 L20 0 L40 20 L20 40 Z' fill='none' stroke='%2300ffff' stroke-width='0.5'/><path d='M20 0 L20 40' stroke='%2300ffff' stroke-width='0.5'/><path d='M0 20 L40 20' stroke='%2300ffff' stroke-width='0.5'/></pattern></defs><rect width='800' height='600' fill='url(%23circuit)'/></svg>") repeat;
+      animation: jarvisMove 15s linear infinite;
+      opacity: 0.5;
+    }
+    @keyframes jarvisMove {
+      0% { transform: translate(0, 0) scale(1); }
+      50% { transform: translate(-50px, 50px) scale(1.05); }
+      100% { transform: translate(0, 0) scale(1); }
+    }
+  </style>
+</head>
+<body>
+  
+  <div class="jarvis-overlay"></div>
+  
+  <div class="main-wrapper">
+    <!-- Left Panel: Welcome Message -->
+    <div class="left-panel">
+      <div class="welcome-message">
+        <!-- Title line -->
+        <div class="line-container title-line">
+          <span class="typewriter-text">Welcome to UniVerse</span>
+        </div>
+        <!-- Additional lines -->
+        <div class="line-container line-2">
+          <span class="typewriter-text">Where Your Vibes Meets Your Tribe</span>
+        </div>
+        <div class="line-container line-3">
+          <span class="typewriter-text">Let's Get Social!!</span>
+        </div>
+        <div class="line-container line-4">
+          <span class="typewriter-text">in style</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right Panel: Login / Registration Form -->
+    <div class="right-panel">
+      <div class="container">
+        <!-- Header Section -->
+        <div class="header-section">
+          <!-- Replace "l11.jpg" with your actual image path if needed -->
+          <img src="l11.jpg" alt="Connect Icon" class="header-icon" />
+          <h2 id="header-title" class="header-title">Login to UniVerse</h2>
+        </div>
+        
+        <!-- Login Form -->
+        <form id="login-form" class="form active">
+          <input 
+            type="text" 
+            class="username-input" 
+            placeholder="@username" 
+            required 
+            pattern="^@.+$"
+            title="Username must start with @" 
+          />
+          <input type="password" placeholder="Password" required />
+          <!-- College select dropdown for login -->
+          <select id="college-select-login" required>
+            <option value="" disabled selected>Select your college</option>
+            <option value="K.C.C.E.M.S.R">K.C.C.E.M.S.R</option>
+          </select>
+          <button type="submit">Login</button>
+        </form>
+        <!-- Registration Form -->
+        <form id="registration-form" class="form">
+          <input 
+            type="text" 
+            class="username-input" 
+            placeholder="@username" 
+            required
+            pattern="^@.+$"
+            title="Username must start with @" 
+          />
+          <input type="password" placeholder="Password" required />
+          <!-- College select dropdown for registration -->
+          <select id="college-select-registration" required>
+            <option value="" disabled selected>Select your college</option>
+            <option value="K.C.C.E.M.S.R">K.C.C.E.M.S.R</option>
+          </select>
+          <button type="submit">Register</button>
+        </form>
+        
+        <!-- Toggle text below the forms -->
+        <div class="toggle-text" id="toggle-text">
+          Don't have an account? <strong>Register</strong>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <script>
+    const toggleText = document.getElementById('toggle-text');
+    const headerTitle = document.getElementById('header-title');
+    const loginForm = document.getElementById('login-form');
+    const registrationForm = document.getElementById('registration-form');
+
+    // Toggle between Login & Registration forms
+    toggleText.addEventListener('click', function() {
+      loginForm.classList.toggle('active');
+      registrationForm.classList.toggle('active');
+      
+      if (loginForm.classList.contains('active')) {
+        headerTitle.textContent = "Login to UniVerse";
+        toggleText.innerHTML = "Don't have an account? <strong>Register</strong>";
+      } else {
+        headerTitle.textContent = "Register to UniVerse";
+        toggleText.innerHTML = "Already have an account? <strong>Login</strong>";
+      }
+    });
+
+    // Handle the Login form submission via Fetch
+    loginForm.addEventListener('submit', async function(event) {
+      event.preventDefault();
+      if (loginForm.checkValidity()) {
+        const username = loginForm.querySelector('.username-input').value;
+        const password = loginForm.querySelector('input[type="password"]').value;
+        const collegeName = document.getElementById('college-select-login').value;
+
+        try {
+          const response = await fetch('http://localhost:3000/login', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ username, password, collegeName })
+          });
+          const data = await response.json();
+          if (response.ok) {
+            localStorage.setItem('username', data.user.username);
+            localStorage.setItem('collegeName', data.user.collegeName);
+            alert(data.message);
+            window.location.href = "home.html";
+          } else {
+            alert(data.message);
+          }
+        } catch (error) {
+          console.error('Error during login:', error);
+          alert('An error occurred. Please try again.');
+        }
+      } else {
+        loginForm.reportValidity();
+      }
+    });
+
+    // Handle the Registration form submission via Fetch
+    registrationForm.addEventListener('submit', async function(event) {
+      event.preventDefault();
+      if (registrationForm.checkValidity()) {
+        const username = registrationForm.querySelector('.username-input').value;
+        const password = registrationForm.querySelector('input[type="password"]').value;
+        const collegeName = document.getElementById('college-select-registration').value;
+
+        try {
+          const response = await fetch('http://localhost:3000/register', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ username, password, collegeName })
+          });
+          const data = await response.json();
+          if (response.ok) {
+            alert(data.message);
+            loginForm.classList.add('active');
+            registrationForm.classList.remove('active');
+            headerTitle.textContent = "Login to UniVerse";
+            toggleText.innerHTML = "Don't have an account? <strong>Register</strong>";
+          } else {
+            alert(data.message);
+          }
+        } catch (error) {
+          console.error('Error during registration:', error);
+          alert('An error occurred. Please try again.');
+        }
+      } else {
+        registrationForm.reportValidity();
+      }
+    });
+
+    // Enhanced speech synthesis with debugging
+    function initSpeech() {
+      if (!('speechSynthesis' in window)) {
+        console.warn('Speech synthesis not supported in this browser');
+        return;
+      }
+
+      const lines = [
+        "Welcome to UniVerse", 
+        "Let's explore the heavenly glory in style"
+      ];
+      let hasSpoken = false;
+
+      function speakLines(index = 0) {
+        if (index >= lines.length) return;
+        if (hasSpoken) return;
+
+        console.log('Attempting to speak:', lines[index]);
+        
+        const utterance = new SpeechSynthesisUtterance(lines[index]);
+        utterance.rate = 0.95;
+        utterance.pitch = 1.1;
+        utterance.volume = 1;
+        utterance.lang = 'en-US';
+
+        utterance.onerror = (event) => {
+          console.error('Speech error:', event.error);
+          setTimeout(() => speakLines(index + 1), 500);
+        };
+
+        utterance.onend = () => {
+          console.log('Finished speaking:', lines[index]);
+          setTimeout(() => speakLines(index + 1), 500);
+        };
+
+        try {
+          speechSynthesis.cancel();
+          speechSynthesis.speak(utterance);
+          hasSpoken = true;
+        } catch (err) {
+          console.error('Speech synthesis failed:', err);
+        }
+      }
+
+      function checkVoices() {
+        const voices = speechSynthesis.getVoices();
+        console.log('Available voices:', voices);
+        
+        if (voices.length > 0) {
+          speakLines();
+        } else {
+          console.log('Waiting for voices to load...');
+          speechSynthesis.onvoiceschanged = () => {
+            console.log('Voices changed event fired');
+            if (!hasSpoken) speakLines();
+          };
+        }
+      }
+
+      checkVoices();
+
+      setTimeout(() => {
+        if (!hasSpoken) {
+          console.log('Fallback voice check');
+          checkVoices();
+        }
+      }, 2000);
+
+      document.addEventListener('visibilitychange', () => {
+        if (document.visibilityState === 'visible' && !hasSpoken) {
+          console.log('Page became visible, retrying speech');
+          checkVoices();
+        }
+      });
+    }
+
+    if (document.readyState === 'complete') {
+      initSpeech();
+    } else {
+      window.addEventListener('load', initSpeech);
+    }
+    
+  </script>
+</body>
+</html>

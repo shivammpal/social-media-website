@@ -1,0 +1,951 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Profile - UniVerse</title>
+  <!-- Bootstrap 5 CSS -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" />
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&family=Orbitron:wght@400;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg-main: #0f2027;
+      --bg-second: #203a43;
+      --bg-third: #2c5364;
+      --glass-bg: rgba(255,255,255,0.1);
+      --glass-border: rgba(255,255,255,0.2);
+      --accent-color: #00ffff;
+      --shadow-color: rgba(0,255,255,0.2);
+    }
+    /* Global Styles */
+    body {
+      font-family: 'Roboto', sans-serif;
+      margin: 0;
+      padding: 0;
+      background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+      color: #ddd;
+      overflow-x: hidden;
+      position: relative;
+    }
+    body::before,
+    body::after {
+      content: "";
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -2;
+      opacity: 0.3;
+      background-repeat: no-repeat;
+      background-size: cover;
+      animation: animateBg 20s linear infinite;
+    }
+    body::before {
+      background: radial-gradient(circle at 30% 30%, rgba(0,255,255,0.2), transparent 70%);
+    }
+    body::after {
+      background: radial-gradient(circle at 70% 70%, rgba(255,0,255,0.2), transparent 70%);
+      animation-direction: reverse;
+    }
+    @keyframes animateBg {
+      0% { transform: translate(0,0); }
+      50% { transform: translate(-50px,50px); }
+      100% { transform: translate(0,0); }
+    }
+
+    .jarvis-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: -3;
+      background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='800' height='600' viewBox='0 0 800 600'><defs><pattern id='circuit' x='0' y='0' width='40' height='40' patternUnits='userSpaceOnUse'><path d='M0 20 L20 0 L40 20 L20 40 Z' fill='none' stroke='%2300ffff' stroke-width='0.5'/><path d='M20 0 L20 40' stroke='%2300ffff' stroke-width='0.5'/><path d='M0 20 L40 20' stroke='%2300ffff' stroke-width='0.5'/></pattern></defs><rect width='800' height='600' fill='url(%23circuit)'/></svg>") repeat;
+      animation: jarvisMove 15s linear infinite;
+      opacity: 0.5;
+    }
+    @keyframes jarvisMove {
+      0% { transform: translate(0, 0) scale(1); }
+      50% { transform: translate(-50px, 50px) scale(1.05); }
+      100% { transform: translate(0, 0) scale(1); }
+    }
+    /* Upper Navigation */
+    .upper-nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      background: rgba(14,14,14,0.9);
+      padding: 10px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      z-index: 1200;
+      border-bottom: 1px solid var(--glass-border);
+    }
+    .upper-nav .brand {
+      display: flex;
+      align-items: center;
+    }
+    .upper-nav .brand img.logo {
+      width: 40px;
+      height: 40px;
+      margin-right: 8px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 1px solid #ccc;
+      filter: drop-shadow(0 0 3px var(--accent-color));
+    }
+    .upper-nav .brand span {
+      font-family: 'Orbitron', sans-serif;
+      color: var(--accent-color);
+      font-size: 1.2rem;
+      font-weight: 700;
+      text-shadow: 0 0 8px var(--accent-color);
+    }
+    .upper-nav .nav-links a {
+      color: var(--accent-color);
+      font-size: 1.5rem;
+      text-decoration: none;
+      margin: 0 15px;
+      transition: color 0.3s ease;
+    }
+    .upper-nav .nav-links a:hover { color: #fff; }
+    .college-info {
+      display: inline-flex;
+      align-items: center;
+      background: var(--glass-bg);
+      padding: 4px 8px;
+      border-radius: 4px;
+      border: 1px solid var(--glass-border);
+      backdrop-filter: blur(5px);
+    }
+    .college-info #collegeNameDisplay {
+      font-weight: 500;
+      margin-left: 5px;
+      animation: colorChange 3s infinite;
+    }
+    @keyframes colorChange {
+      0% { color: #00ffff; } 25% { color: #ff00ff; } 50% { color: #ffff00; } 75% { color: #00ff00; } 100% { color: #00ffff; }
+    }
+    /* Left Sidebar */
+    .side-nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 180px;
+      height: 100vh;
+      background: rgba(14,14,14,0.85);
+      border-radius: 0 15px 15px 0;
+      z-index: 1100;
+      padding: 20px 0;
+      overflow-y: auto;
+      border-right: 1px solid var(--glass-border);
+    }
+    .side-nav a.nav-item {
+      display: flex;
+      align-items: center;
+      text-decoration: none;
+      color: var(--accent-color);
+      font-size: 1rem;
+      padding: 10px 20px;
+      transition: background 0.3s ease, transform 0.3s ease;
+    }
+    .side-nav a.nav-item i {
+      font-size: 1.5rem;
+      min-width: 30px;
+      text-align: center;
+      margin-right: 15px;
+    }
+    .side-nav a.nav-item:hover {
+      background: rgba(0,255,255,0.15);
+      transform: scale(1.05);
+      border-radius: 0 15px 15px 0;
+    }
+    .side-nav a.nav-item:hover i {
+      filter: drop-shadow(0 0 8px var(--accent-color));
+    }
+    /* Main Content */
+    .container {
+      margin-top: 80px;
+      margin-left: 200px;
+      padding-bottom: 60px;
+    }
+    /* Profile Section */
+    .profile-container {
+      max-width: 900px;
+      margin: 40px auto;
+      background: var(--glass-bg);
+      border-radius: 12px;
+      border: 1px solid var(--glass-border);
+      box-shadow: 0 4px 15px var(--shadow-color);
+      backdrop-filter: blur(8px);
+      overflow: hidden;
+      position: relative;
+    }
+    /* Cover Photo */
+    .profile-cover {
+      width: 100%;
+      height: 200px;
+      background: url('cover.jpg') center/cover no-repeat;
+      position: relative;
+    }
+    .profile-cover::after {
+      content: "";
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0,0,0,0.3);
+    }
+    /* Profile Info Section: Two Columns */
+    .profile-info-section {
+      display: flex;
+      padding: 20px;
+      margin-top: -80px;  /* Move section up */
+      gap: 20px;
+    }
+    .profile-left-column {
+      margin-top: -20px;  /* Move logo up */
+    }
+    .profile-right-column {
+      margin-top: 40px;  /* Move name/edit down */
+    }
+    /* Left Column: Profile Logo & Additional Info */
+    .profile-left-column {
+      width: 220px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .profile-image-container {
+      position: relative;
+    }
+    .profile-image-container img {
+      width: 160px;
+      height: 160px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 4px solid var(--accent-color);
+      box-shadow: 0 0 20px rgba(0,255,255,0.3);
+      cursor: pointer;
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+    .profile-image-container img:hover {
+      transform: scale(1.12);
+      box-shadow: 0 0 50px rgba(142, 217, 29, 0.6);
+    }
+    /* Add Story Icon on lower edge of profile logo */
+    .profile-image-container .add-story {
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      transform: translate(-50%, 50%);
+      background: var(--accent-color);
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      box-shadow: 0 0 10px rgba(0,255,255,0.5);
+    }
+    .profile-image-container .add-story i {
+      color: #000;
+      font-size: 1.2rem;
+    }
+    .profile-additional-info {
+      margin-top: 40px;
+      text-align: center;
+      color: black;
+    }
+    .profile-additional-info p { margin: 4px 0; }
+    .profile-additional-info a { color: var(--accent-color); text-decoration: none; }
+    /* Right Column: Name & Edit Profile Button */
+    .profile-right-column {
+      flex-grow: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      padding-top: 20px;
+      color: black;
+    }
+    .profile-header-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .profile-header-row h2 {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 2rem;
+      margin: 0;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+    }
+    .profile-header-row button {
+      background: transparent;
+      color: var(--accent-color);
+      border: 2px solid var(--accent-color);
+      border-radius: 20px;
+      font-weight: 600;
+      padding: 6px 12px;
+      transition: background 0.3s, color 0.3s;
+    }
+    .profile-header-row button:hover {
+      background: var(--accent-color);
+      color: #000;
+    }
+    /* Profile Stats */
+    .profile-stats {
+      display: flex;
+      justify-content: space-around;
+      border-top: 1px solid rgba(185, 98, 98, 0.15);
+      border-bottom: 1px solid rgba(0,0,0,0.15);
+      padding: 15px 0;
+      color: black;
+    }
+    .profile-stats div { text-align: center; }
+    .profile-stats div strong {
+      display: block;
+      color: var(--accent-color);
+      margin-bottom: 5px;
+      font-size: 1.1rem;
+    }
+    /* Tabs */
+    .nav-tabs {
+      background: rgba(0,0,0,0.2);
+      padding: 10px;
+      border-bottom: none;
+      display: flex;
+      justify-content: space-around;
+    }
+    .nav-tabs .nav-link {
+      border: none;
+      background: transparent;
+      color: var(--accent-color);
+      font-family: 'Orbitron', sans-serif;
+      font-size: 0.9rem;
+      transition: background 0.3s, color 0.3s;
+      padding: 8px 16px;
+      border-radius: 12px;
+    }
+    .nav-tabs .nav-link.active, .nav-tabs .nav-link:hover {
+      background: var(--accent-color);
+      color: #000;
+    }
+    .tab-content { padding: 20px; color: #fff; }
+    /* Story Highlights Section */
+    .story-highlights {
+      display: flex;
+      overflow-x: auto;
+      padding: 10px 20px;
+      gap: 15px;
+    }
+    .story-item {
+      flex: 0 0 auto;
+      text-align: center;
+      cursor: pointer;
+    }
+    .story-item img {
+      width: 70px;
+      height: 70px;
+      border-radius: 50%;
+      border: 2px solid var(--accent-color);
+      object-fit: cover;
+      transition: transform 0.3s;
+    }
+    .story-item img:hover { transform: scale(1.1); }
+    .story-item span {
+      display: block;
+      margin-top: 5px;
+      font-size: 0.8rem;
+      color: #ccc;
+    }
+    .add-highlight {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 70px;
+      height: 70px;
+      border-radius: 50%;
+      border: 2px dashed var(--accent-color);
+      cursor: pointer;
+    }
+    .add-highlight i { color: var(--accent-color); font-size: 1.5rem; }
+    /* Logout Section */
+    .logout-section {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 15px;
+      color: #fff;
+      border-top: 1px solid rgba(255,255,255,0.15);
+    }
+    .logout-icon {
+      font-size: 1.5rem;
+      color: #e20a6b;
+      cursor: pointer;
+      transition: color 0.3s, transform 0.3s;
+      margin-right: 8px;
+    }
+    .logout-icon:hover { color: #d81290; transform: scale(1.1); }
+    /* Modals */
+    .modal-content {
+      background: rgba(255,255,255,0.07);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255,255,255,0.2);
+      box-shadow: 0 4px 15px rgba(0,255,255,0.2);
+      color: #fff;
+    }
+    .modal-header, .modal-footer {
+      background: rgba(14,14,14,0.4);
+      border-bottom: 1px solid rgba(255,255,255,0.2);
+      border-top: 1px solid rgba(255,255,255,0.2);
+    }
+    .modal-title { color: var(--accent-color); }
+    .btn-close { filter: drop-shadow(0 0 3px var(--accent-color)); }
+    .modal-body .form-control {
+      background-color: rgba(255,255,255,0.1) !important;
+      color: #fff !important;
+      border: 1px solid rgba(255,255,255,0.3) !important;
+    }
+    .modal-body .form-control::placeholder { color: #ccc; }
+    /* Slide-Up Animation for Edit Profile Modal */
+    .modal-dialog.slide-up {
+      transform: translateY(100%);
+      animation: slideUp 0.5s forwards;
+    }
+    @keyframes slideUp { to { transform: translateY(0); } }
+    .modal-dialog {
+      margin: 80px auto;
+      max-height: 90vh;
+    }
+    .modal-body { overflow-y: auto; }
+    /* make profile container solid */
+.profile-container {
+  background: var(--bg-main) !important;    /* your main dark color (#0e0e0e) */
+  border-color: var(--glass-border);         /* keep your existing border if you like */
+  box-shadow: 0 4px 15px var(--shadow-color);/* keep the same shadow */
+  backdrop-filter: none !important;          /* turn off any blur/glass effect */
+}
+/* make profile text white and italic */
+#profile-name,
+#profile-username,
+#profile-bio,
+#locationDetail,
+#websiteDetail,
+#profile-posts,
+#profile-followers,
+#profile-following {
+  color: #fff !important;
+  font-style: italic !important;
+}
+
+  </style>
+</head>
+<body>
+  <!-- Jarvis Overlay -->
+  <div class="jarvis-overlay"></div>
+  <!-- Upper Navigation -->
+  <div class="upper-nav">
+    <div class="brand">
+      <img src="l11.jpg" alt="Logo" class="logo" />
+      <span>UniVerse</span>
+    </div>
+    <div class="nav-links">
+      <a href="notification.html" title="Notifications"><i class="fas fa-bell"></i></a>
+      <a href="profile.html" title="Profile"><i class="fas fa-user-circle"></i></a>
+      <span class="college-info">College: <span id="collegeNameDisplay"></span></span>
+    </div>
+  </div>
+  <!-- Left Sidebar -->
+  <div class="side-nav">
+    <a href="home.html" title="Home" class="nav-item" id="homeLink">
+      <i class="fas fa-home"></i>
+      <span>Home</span>
+    </a>
+    <a href="home.html" title="Home" class="nav-item" id="homeLink">
+      <i class="fas fa-home"></i>
+      <span>Home</span>
+    </a>
+    <a href="search.html" title="Find" class="nav-item">
+      <i class="fas fa-search"></i>
+      <span>Find</span>
+    </a>
+    <a href="chat.html" title="Gossips" class="nav-item">
+      <i class="fas fa-comments"></i>
+      <span>Gossips</span>
+    </a>
+    <a href="reel.html" title="Snippets" class="nav-item">
+      <i class="fas fa-clapperboard"></i>
+      <span>Snippets</span>
+    </a>
+    <a href="profile.html" title="Profile" class="nav-item">
+      <i class="fas fa-user-circle"></i>
+      <span>Profile</span>
+    </a>
+    <a href="bookmark.html" title="Highlights" class="nav-item">
+      <i class="fas fa-bookmark"></i>
+      <span>Highlights</span>
+    </a>
+    <a href="archive.html" title="Archive" class="nav-item">
+      <i class="fas fa-box-archive"></i>
+      <span>Archive</span>
+    </a>
+    <a href="notes.html" title="Notes" class="nav-item">
+      <i class="fas fa-file-alt"></i>
+      <span>Notes</span>
+    </a>
+  </div>
+  <!-- Main Profile Content -->
+  <div class="container">
+    <div class="profile-container">
+      <!-- Cover Photo -->
+      <div class="profile-cover" id="profileCover"></div>
+      <!-- Profile Info Section: Two Columns -->
+      <div class="profile-info-section">
+        <!-- Left Column: Profile Logo & Additional Info -->
+        <div class="profile-left-column">
+          <div class="profile-image-container">
+            <img id="profile-pic" src="s12.png" alt="Profile" onclick="viewStory()" />
+            <!-- Add Story Icon on bottom edge -->
+            <div class="add-story" onclick="openAddStoryModal()">
+              <i class="fas fa-plus"></i>
+            </div>
+          </div>
+          <div class="profile-additional-info">
+            <p id="profile-username">@username</p>
+            <p id="profile-bio">This is the user bio.</p>
+            <p id="locationDetail" class="empty"><i class="fas fa-map-marker-alt"></i> <span id="profile-location"></span></p>
+            <p id="websiteDetail" class="empty"><i class="fas fa-link"></i> <a id="profile-website" href="#" target="_blank"></a></p>
+          </div>
+        </div>
+        <!-- Right Column: Name & Edit Profile Button -->
+        <div class="profile-right-column">
+          <div class="profile-header-row">
+            <h2 id="profile-name">Name</h2>
+            <button id="edit-profile-btn" class="btn btn-sm btn-outline-primary" data-bs-toggle="modal" data-bs-target="#editProfileModal">
+              Edit Profile
+            </button>
+          </div>
+        </div>
+      </div>
+      <!-- Profile Stats -->
+      <div class="profile-stats">
+        <div><strong>Posts</strong><div id="profile-posts">0</div></div>
+        <div><strong>Followers</strong><div id="profile-followers">0</div></div>
+        <div><strong>Following</strong><div id="profile-following">0</div></div>
+      </div>
+      <!-- Tabs -->
+      <ul class="nav nav-tabs" id="profileTabs" role="tablist">
+        <li class="nav-item" role="presentation">
+          <button class="nav-link active" id="gallery-tab" data-bs-toggle="tab" data-bs-target="#gallery-tab-pane" type="button" role="tab" aria-controls="gallery-tab-pane" aria-selected="true">
+            <i class="fas fa-th"></i> Gallery
+          </button>
+        </li>
+        <li class="nav-item" role="presentation">
+          <button class="nav-link" id="saved-tab" data-bs-toggle="tab" data-bs-target="#saved-tab-pane" type="button" role="tab" aria-controls="saved-tab-pane" aria-selected="false">
+            <i class="fas fa-bookmark"></i> Saved
+          </button>
+        </li>
+        <li class="nav-item" role="presentation">
+          <button class="nav-link" id="activity-tab" data-bs-toggle="tab" data-bs-target="#activity-tab-pane" type="button" role="tab" aria-controls="activity-tab-pane" aria-selected="false">
+            <i class="fas fa-stream"></i> Activity
+          </button>
+        </li>
+      </ul>
+      <div class="tab-content" id="profileTabsContent">
+        <div class="tab-pane fade show active" id="gallery-tab-pane" role="tabpanel" aria-labelledby="gallery-tab">
+          <p>Gallery items go here.</p>
+        </div>
+        <div class="tab-pane fade" id="saved-tab-pane" role="tabpanel" aria-labelledby="saved-tab">
+          <p>Saved items go here.</p>
+        </div>
+        <div class="tab-pane fade" id="activity-tab-pane" role="tabpanel" aria-labelledby="activity-tab">
+          <ul id="activityFeed" class="list-group">
+            <!-- Activity items injected via JS -->
+          </ul>
+        </div>
+      </div>
+      <!-- Story Highlights Section -->
+      <div class="story-highlights" id="highlightsContainer">
+        <div class="story-item add-highlight" onclick="openAddHighlightModal()">
+          <i class="fas fa-plus"></i>
+        </div>
+      </div>
+      <!-- Logout Section -->
+      <div class="logout-section">
+        <i class="fas fa-sign-out-alt logout-icon" id="logoutIcon" title="Logout"></i><span>Logout</span>
+      </div>
+    </div>
+  </div>
+  <!-- Edit Profile Modal (Slide-Up, Centered, Scrollable) -->
+  <div class="modal fade" id="editProfileModal" tabindex="-1" aria-labelledby="editProfileModalLabel" aria-hidden="true">
+    <div class="modal-dialog slide-up modal-dialog-centered modal-dialog-scrollable">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="editProfileModalLabel">Edit Profile</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form>
+            <!-- Profile Picture -->
+            <div class="mb-3">
+              <label for="modalProfilePicInput" class="form-label">Profile Picture</label>
+              <input type="file" class="form-control" id="modalProfilePicInput" accept="image/*" />
+            </div>
+            <!-- Cover Image -->
+            <div class="mb-3">
+              <label for="modalCoverInput" class="form-label">Cover Image</label>
+              <input type="file" class="form-control" id="modalCoverInput" accept="image/*" />
+            </div>
+            <!-- Name -->
+            <div class="mb-3">
+              <label for="modalNameInput" class="form-label">Name</label>
+              <input type="text" class="form-control" id="modalNameInput" placeholder="Enter your name" />
+            </div>
+            <!-- Username -->
+            <div class="mb-3">
+              <label for="modalUsernameInput" class="form-label">@Username</label>
+              <input type="text" class="form-control" id="modalUsernameInput" placeholder="Enter your username" />
+            </div>
+            <!-- Bio -->
+            <div class="mb-3">
+              <label for="modalBioInput" class="form-label">Bio</label>
+              <textarea class="form-control" id="modalBioInput" rows="3" placeholder="Enter your bio"></textarea>
+            </div>
+            <!-- Location with Get Current Location Button -->
+            <div class="mb-3">
+              <label for="modalLocationInput" class="form-label">Location</label>
+              <div class="input-group">
+                <input type="text" class="form-control" id="modalLocationInput" placeholder="Enter your location" />
+                <button type="button" class="btn btn-outline-secondary" id="getLocationBtn">Get Current Location</button>
+              </div>
+            </div>
+            <!-- Website -->
+            <div class="mb-3">
+              <label for="modalWebsiteInput" class="form-label">Website</label>
+              <input type="url" class="form-control" id="modalWebsiteInput" placeholder="Enter your website URL" />
+            </div>
+            <!-- Theme Color -->
+            <div class="mb-3">
+              <label for="modalThemeInput" class="form-label">Theme Color</label>
+              <input type="color" class="form-control form-control-color" id="modalThemeInput" value="#00ffff" title="Choose your theme color">
+            </div>
+            <!-- Privacy Controls -->
+            <div class="mb-3">
+              <label for="modalPrivacySelect" class="form-label">Privacy Settings</label>
+              <select class="form-select" id="modalPrivacySelect">
+                <option value="public" selected>Public</option>
+                <option value="private">Private</option>
+                <option value="friends">Friends Only</option>
+              </select>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+          <button type="button" class="btn btn-primary" id="saveModalChangesBtn">Save Changes</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Add Story Modal -->
+  <div class="modal fade" id="addStoryModal" tabindex="-1" aria-labelledby="addStoryModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="addStoryModalLabel">Add Story</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <p>Select an image to upload as your story.</p>
+          <input type="file" class="form-control" id="modalStoryInput" accept="image/*" />
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+          <button type="button" class="btn btn-primary" id="saveStoryBtn">Upload Story</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- View Story Modal -->
+  <div class="modal fade" id="viewStoryModal" tabindex="-1" aria-labelledby="viewStoryModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="viewStoryModalLabel">Your Story</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <img id="storyImage" src="" alt="Story" style="width:100%; height:auto; border-radius:8px;" />
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- View Highlight Modal -->
+  <div class="modal fade" id="viewHighlightModal" tabindex="-1" aria-labelledby="viewHighlightModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="viewHighlightModalLabel">Highlight</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <img id="highlightImage" src="" alt="Highlight" style="width:100%; height:auto; border-radius:8px;" />
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Add Highlight Modal (Allow multiple files upload) -->
+  <div class="modal fade" id="addHighlightModal" tabindex="-1" aria-labelledby="addHighlightModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="addHighlightModalLabel">Add Highlight</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body" id="highlightList">
+          <!-- Existing uploaded stories will be listed here -->
+          <p>If none of your uploaded stories suit this highlight, you can upload new images.</p>
+          <input type="file" class="form-control" id="modalHighlightInput" accept="image/*" multiple />
+          <button class="btn btn-primary mt-2" id="uploadHighlightBtn">Upload Selected Highlights</button>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Bootstrap 5 JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    // In-memory storage for uploaded stories (not persistent)
+    let uploadedStories = [];
+    
+    // Get username from localStorage
+    function getCurrentUsername() {
+      const username = localStorage.getItem('username');
+      return username || "@username"; // Fallback if not set
+    }
+    
+    // Update profile username on DOM load
+    document.addEventListener("DOMContentLoaded", () => {
+      const username = getCurrentUsername();
+      document.getElementById("profile-username").textContent = username;
+
+      // Set name (default if not provided)
+      document.getElementById("profile-name").textContent = "Name";
+      const collegeName = localStorage.getItem('collegeName');
+      document.getElementById('collegeNameDisplay').textContent = collegeName ? collegeName : "Not Set";
+      
+      // No persistent storage for location/website
+      
+      // Fetch activity feed (adjust endpoint as needed)
+      fetch('http://localhost:3000/activity')
+        .then(res => res.json())
+        .then(activities => {
+          const feed = document.getElementById("activityFeed");
+          feed.innerHTML = "";
+          activities.forEach(act => {
+            const li = document.createElement("li");
+            li.className = "list-group-item bg-transparent text-white";
+            li.textContent = act.message;
+            feed.appendChild(li);
+          });
+        })
+        .catch(error => {
+          console.error("Error fetching activity feed:", error);
+        });
+    });
+    
+    // --- Edit Profile Modal Logic ---
+    const profilePic = document.getElementById("profile-pic");
+    const profileName = document.getElementById("profile-name");
+    const profileUsername = document.getElementById("profile-username");
+    const profileBio = document.getElementById("profile-bio");
+    const modalProfilePicInput = document.getElementById("modalProfilePicInput");
+    const modalCoverInput = document.getElementById("modalCoverInput");
+    const modalNameInput = document.getElementById("modalNameInput");
+    const modalUsernameInput = document.getElementById("modalUsernameInput");
+    const modalBioInput = document.getElementById("modalBioInput");
+    const modalLocationInput = document.getElementById("modalLocationInput");
+    const modalWebsiteInput = document.getElementById("modalWebsiteInput");
+    const modalThemeInput = document.getElementById("modalThemeInput");
+    const modalPrivacySelect = document.getElementById("modalPrivacySelect");
+    const saveModalChangesBtn = document.getElementById("saveModalChangesBtn");
+    
+    document.getElementById("editProfileModal").addEventListener("show.bs.modal", () => {
+      modalNameInput.value = profileName.textContent;
+      modalUsernameInput.value = getCurrentUsername().replace('@', '');
+      modalBioInput.value = profileBio.textContent;
+      modalLocationInput.value = "";
+      modalWebsiteInput.value = "";
+      modalProfilePicInput.value = "";
+      modalCoverInput.value = "";
+    });
+    
+    saveModalChangesBtn.addEventListener("click", () => {
+      const newName = modalNameInput.value.trim();
+      profileName.textContent = newName || "Name";
+      
+      const newUsername = modalUsernameInput.value.trim();
+      profileUsername.textContent = newUsername ? "@" + newUsername : "@username";
+      
+      profileBio.textContent = modalBioInput.value.trim();
+      
+      const newLocation = modalLocationInput.value.trim();
+      if(newLocation !== "") {
+        document.getElementById("profile-location").textContent = newLocation;
+        document.getElementById("locationDetail").classList.remove("empty");
+      } else {
+        document.getElementById("locationDetail").classList.add("empty");
+      }
+      
+      const newWebsite = modalWebsiteInput.value.trim();
+      if(newWebsite !== "") {
+        document.getElementById("profile-website").textContent = newWebsite;
+        document.getElementById("profile-website").href = newWebsite;
+        document.getElementById("websiteDetail").classList.remove("empty");
+      } else {
+        document.getElementById("websiteDetail").classList.add("empty");
+      }
+      
+      document.documentElement.style.setProperty('--accent-color', modalThemeInput.value);
+      console.log("Privacy setting:", modalPrivacySelect.value);
+      
+      const coverFile = modalCoverInput.files[0];
+      if (coverFile) {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          document.getElementById("profileCover").style.backgroundImage = `url(${e.target.result})`;
+        };
+        reader.readAsDataURL(coverFile);
+      }
+      
+      const file = modalProfilePicInput.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = (e) => { profilePic.src = e.target.result; };
+        reader.readAsDataURL(file);
+      }
+      
+      const modalEl = bootstrap.Modal.getInstance(document.getElementById("editProfileModal"));
+      modalEl.hide();
+    });
+    
+    // --- Get Current Location ---
+    document.getElementById("getLocationBtn").addEventListener("click", () => {
+      if(navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition((position) => {
+          const lat = position.coords.latitude.toFixed(4);
+          const lon = position.coords.longitude.toFixed(4);
+          modalLocationInput.value = `Lat: ${lat}, Lon: ${lon}`;
+        }, (error) => { alert("Error getting location: " + error.message); });
+      } else {
+        alert("Geolocation is not supported by your browser.");
+      }
+    });
+    
+    // --- Logout ---
+    document.getElementById("logoutIcon").addEventListener("click", () => {
+      window.location.href = "auth.html";
+    });
+    
+    // --- Story Logic (in-memory only) ---
+    function openAddStoryModal() {
+      const modalEl = bootstrap.Modal.getOrCreateInstance(document.getElementById('addStoryModal'));
+      modalEl.show();
+    }
+    document.getElementById("saveStoryBtn").addEventListener("click", () => {
+      const file = document.getElementById("modalStoryInput").files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          document.getElementById("storyImage").src = e.target.result;
+          // Add story to in-memory array
+          uploadedStories.push(e.target.result);
+        };
+        reader.readAsDataURL(file);
+      }
+      const modalInstance = bootstrap.Modal.getOrCreateInstance(document.getElementById("addStoryModal"));
+      modalInstance.hide();
+    });
+    function viewStory() {
+      const story = document.getElementById("storyImage").src;
+      if (story) {
+        const viewModalEl = bootstrap.Modal.getOrCreateInstance(document.getElementById('viewStoryModal'));
+        viewModalEl.show();
+      } else {
+        alert("No story found. Please add a story first!");
+      }
+    }
+    
+    // --- Highlight Logic ---
+    function openAddHighlightModal() {
+      const highlightList = document.getElementById("highlightList");
+      highlightList.innerHTML = "";
+      if(uploadedStories.length === 0) {
+        highlightList.innerHTML = "<p>No uploaded stories available. You can upload new highlights below.</p>";
+      } else {
+        uploadedStories.forEach((storyUrl, index) => {
+          const div = document.createElement("div");
+          div.style.display = "inline-block";
+          div.style.margin = "5px";
+          div.style.cursor = "pointer";
+          div.innerHTML = `<img src="${storyUrl}" alt="Story ${index}" style="width:80px; height:80px; border-radius:50%; border:2px solid var(--accent-color);" />`;
+          // Clicking the image will add it as a highlight
+          div.onclick = () => { addHighlight(storyUrl); };
+          highlightList.appendChild(div);
+        });
+      }
+      const modalEl = bootstrap.Modal.getOrCreateInstance(document.getElementById('addHighlightModal'));
+      modalEl.show();
+    }
+    function addHighlight(storyUrl) {
+      const highlightContainer = document.getElementById("highlightsContainer");
+      const newHighlight = document.createElement("div");
+      newHighlight.className = "story-item";
+      newHighlight.style.marginRight = "10px";
+      newHighlight.innerHTML = `<img src="${storyUrl}" alt="Highlight" /><span>Highlight</span>`;
+      // Clicking the highlight views it
+      newHighlight.onclick = () => { viewHighlight(storyUrl); };
+      highlightContainer.insertBefore(newHighlight, highlightContainer.firstChild);
+      const modalEl = bootstrap.Modal.getOrCreateInstance(document.getElementById('addHighlightModal'));
+      modalEl.hide();
+    }
+    function viewHighlight(highlightUrl) {
+      document.getElementById("highlightImage").src = highlightUrl;
+      const viewModalEl = bootstrap.Modal.getOrCreateInstance(document.getElementById('viewHighlightModal'));
+      viewModalEl.show();
+    }
+    
+    // --- Allow multiple highlights upload in one go ---
+    document.getElementById("uploadHighlightBtn").addEventListener("click", () => {
+      const files = document.getElementById("modalHighlightInput").files;
+      if (files.length === 0) {
+        alert("Please select at least one file to upload as highlights.");
+        return;
+      }
+      Array.from(files).forEach(file => {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          addHighlight(e.target.result);
+        };
+        reader.readAsDataURL(file);
+      });
+    });
+  </script>
+</body>
+</html>
