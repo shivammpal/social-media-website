@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Gallery</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" />
+  <style>
+    body {
+        background: linear-gradient(135deg, #2b5876, #4e4376);
+      margin: 0;
+      padding: 20px;
+      font-family: Arial, sans-serif;
+    }
+    .gallery-container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    .gallery-container h2 {
+      margin-bottom: 20px;
+      text-align: center;
+    }
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+    }
+    .gallery-item {
+      background: #fff;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      transition: transform 0.3s ease;
+    }
+    .gallery-item:hover {
+      transform: scale(1.02);
+    }
+    .gallery-item img,
+    .gallery-item video {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+    .gallery-item .caption {
+      padding: 10px;
+      text-align: center;
+      font-size: 0.9rem;
+      color: #555;
+    }
+  </style>
+</head>
+<body>
+  <div class="gallery-container">
+    <h2>Your Gallery</h2>
+    <div id="galleryGrid" class="gallery-grid">
+      <!-- User posts will be dynamically inserted here -->
+    </div>
+  </div>
+  
+  <script>
+    function loadUserGallery() {
+      // Retrieve the current user's username from localStorage (or default to "Username")
+      const currentUser = localStorage.getItem("profileUsername") || "Username";
+      // Retrieve all posts from localStorage
+      const posts = JSON.parse(localStorage.getItem("posts")) || [];
+      // Filter posts to include only those posted by the current user
+      const userPosts = posts.filter(post => post.username === currentUser);
+      
+      const galleryGrid = document.getElementById("galleryGrid");
+      
+      if (userPosts.length === 0) {
+        galleryGrid.innerHTML = "<p class='text-center'>No posts found in your gallery.</p>";
+        return;
+      }
+      
+      userPosts.forEach(post => {
+        const item = document.createElement("div");
+        item.classList.add("gallery-item");
+        let mediaContent = "";
+        if (post.type && post.type.startsWith("image")) {
+          mediaContent = `<img src="${post.src}" alt="Post Image">`;
+        } else if (post.type && post.type.startsWith("video")) {
+          mediaContent = `<video controls><source src="${post.src}" type="${post.type}"></video>`;
+        }
+        
+        item.innerHTML = `
+          ${mediaContent}
+          <div class="caption">
+            <p>${post.caption || ""}</p>
+          </div>
+        `;
+        galleryGrid.appendChild(item);
+      });
+    }
+    document.addEventListener("DOMContentLoaded", loadUserGallery);
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

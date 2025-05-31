@@ -1,0 +1,1170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Futuristic Chat UI - Updated</title>
+  <!-- Font Awesome for icons (CDN) -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <!-- Example monospaced font -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+        --bg-main: #0e0e0e;
+        --glass-bg: rgba(255, 255, 255, 0.1);
+        --glass-border: rgba(255, 255, 255, 0.2);
+        --accent-color: #00ffff;
+        --shadow-color: rgba(0, 255, 255, 0.2);
+      }
+      
+      body, html {
+        width: 100%;
+        height: 100%;
+        margin: 0;
+        padding: 0;
+        font-family: 'Roboto', sans-serif;
+        background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+        color: #ddd;
+        position: relative;
+      }
+       /* Upper Navigation Bar - Same as home.html */
+    .upper-nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      background: rgba(14, 14, 14, 0.9);
+      padding: 10px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      z-index: 1200;
+      border-bottom: 1px solid var(--glass-border);
+    }
+    .upper-nav .brand {
+      display: flex;
+      align-items: center;
+    }
+    .upper-nav .brand img.logo {
+      width: 40px;
+      height: 40px;
+      margin-right: 8px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 1px solid #ccc;
+      filter: drop-shadow(0 0 3px var(--accent-color));
+    }
+    .upper-nav .brand span {
+      font-family: 'Orbitron', sans-serif;
+      color: var(--accent-color);
+      font-size: 1.2rem;
+      font-weight: 700;
+      text-shadow: 0 0 8px var(--accent-color);
+    }
+    .upper-nav .nav-links {
+      display: flex;
+      align-items: center;
+      overflow: visible;
+    }
+    .upper-nav .nav-links a {
+      color: var(--accent-color);
+      font-size: 1.5rem;
+      text-decoration: none;
+      margin: 0 15px;
+      transition: color 0.3s ease;
+    }
+    .upper-nav .nav-links a:hover {
+      color: #fff;
+    } 
+     /* Left Navigation - Same as home.html */
+     .side-nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 180px;
+      height: 100vh;
+      background: rgba(14, 14, 14, 0.85);
+      border-radius: 0 15px 15px 0;
+      z-index: 1100;
+      padding: 20px 0;
+      overflow-y: auto;
+      border-right: 1px solid var(--glass-border);
+    }
+    .side-nav a.nav-item {
+      display: flex;
+      align-items: center;
+      text-decoration: none;
+      color: var(--accent-color);
+      font-size: 1rem;
+      padding: 10px 20px;
+      transition: background 0.3s ease, transform 0.3s ease;
+    }
+    .side-nav a.nav-item i {
+      font-size: 1.5rem;
+      min-width: 30px;
+      text-align: center;
+      margin-right: 15px;
+    }
+    .side-nav a.nav-item:hover {
+      background: rgba(0, 255, 255, 0.15);
+      transform: scale(1.05);
+      border-radius: 0 15px 15px 0;
+    }
+
+      /* Removed glow effect by setting box-shadow to none */
+      .container-whatsapp {
+        position: absolute;
+        top: 60px;         /* height of your .upper-nav bar */
+        left: 180px;       /* width of your .side-nav */
+        right: 0;          /* flush to the right edge */
+        bottom: 0;         /* flush to the bottom edge */
+        display: flex;
+        overflow: hidden;
+        box-shadow: none;
+        background: rgba(255, 255, 255, 0.05);
+        backdrop-filter: blur(12px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+      }
+      
+  
+    /* Sidebar */
+    .sidebar {
+      width: 10%;
+      min-width: 250px;
+      background: rgba(163, 232, 2, 0.1);
+      border-right: 1px solid rgba(13, 79, 126, 0.2);
+      display: flex;
+      flex-direction: column;
+      padding: 20px;
+    }
+    .sidebar-header {
+      display: flex; 
+      align-items: center; 
+      justify-content: space-between;
+      padding-bottom: 10px;
+      border-bottom: 1px solid rgba(0, 255, 255, 0.2);
+    }
+    .sidebar-header .user-details .avatar {
+      width: 40px; 
+      height: 40px; 
+      border-radius: 50%; 
+      object-fit: cover;
+      border: 1px solid rgba(23, 210, 116, 0.5);
+    }
+    .sidebar-header .sidebar-icons a {
+      margin: 0 6px;
+      color: rgb(18, 249, 137);
+      font-size: 20px;
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .sidebar-header .sidebar-icons a:hover { 
+      color: #fff; 
+    }
+    .search-bar {
+      padding: 8px 10px;
+      margin: 15px 0;
+      border-radius: 10px;
+      background: rgba(0, 0, 0, 0.6);
+      display: flex; 
+      align-items: center;
+      border: 1px solid rgba(0, 255, 255, 0.3);
+    }
+    .search-bar i { 
+      color: #0ff; 
+      margin-right: 8px; 
+      font-size: 16px; 
+    }
+    .search-bar input {
+      flex: 1; 
+      border: none; 
+      outline: none; 
+      background: transparent; 
+      color: #0ff; 
+      font-size: 14px;
+    }
+    .chat-list { 
+      flex: 1; 
+      overflow-y: auto; 
+    }
+    /* New style rule for active (highlighted) chat items */
+    .chat-item.active {
+      background: #2b2b2b;
+    }
+    .chat-item {
+      display: flex; 
+      align-items: center; 
+      padding: 12px;
+      margin-bottom: 10px;
+      cursor: pointer; 
+      border-radius: 10px;
+      transition: background 0.3s;
+    }
+    .chat-item.group-chat {
+      background: rgba(0,0,0,0.3);
+    }
+    .chat-item:hover { 
+      background: rgba(0, 255, 255, 0.1); 
+    }
+    .chat-avatar {
+      width: 50px; 
+      height: 50px; 
+      border-radius: 50%; 
+      object-fit: cover;
+      margin-right: 10px; 
+      border: 1px solid rgba(0, 255, 255, 0.4);
+    }
+    .chat-info { flex: 1; }
+    .chat-name { 
+      font-weight: 700; 
+      color: rgb(0, 255, 251); 
+      margin-bottom: 4px; 
+    }
+    .chat-last-message { 
+      font-size: 14px; 
+      color: #0af; 
+      white-space: nowrap; 
+      overflow: hidden; 
+      text-overflow: ellipsis; 
+    }
+    .chat-time { 
+      font-size: 12px; 
+      color: rgb(11, 234, 204); 
+    }
+    /* Right Chat Area */
+    .chat-area {
+      flex: 1;
+      background: transparent !important;
+      display: flex;
+      flex-direction: column;
+      padding: 20px;
+    }
+    .chat-area-header {
+      display: flex; 
+      align-items: center; 
+      justify-content: space-between;
+      padding-bottom: 10px;
+      border-bottom: 1px solid rgba(239, 166, 8, 0.2);
+      margin-bottom: 20px;
+    }
+    .contact-info {
+      display: flex; 
+      align-items: center;
+    }
+    .contact-info .avatar {
+      width: 40px; 
+      height: 40px; 
+      border-radius: 50%; 
+      margin-right: 10px;
+      border: 1px solid rgba(9, 233, 233, 0.5);
+      object-fit: cover;
+    }
+    .contact-name { 
+      font-weight: 700; 
+      font-size: 16px; 
+      color: rgb(243, 246, 246); 
+    }
+    .chat-area-icons a {
+      color: rgb(243, 247, 247); 
+      font-size: 20px; 
+      text-decoration: none; 
+      margin-left: 10px;
+      transition: color 0.2s;
+    }
+    .chat-area-icons a:hover { 
+      color: #fff; 
+    }
+    .chat-messages {
+      flex: 1; 
+      overflow-y: auto;
+      padding: 20px;
+      background: rgba(0, 255, 255, 0.1) !important;
+      border-radius: 10px;
+    }
+    .message {
+      background: rgba(0, 255, 255, 0.1) !important;
+      max-width: 80%;
+      margin-bottom: 8px;
+      padding: 8px 12px;
+      border-radius: 15px;
+      font-size: 14px;
+      line-height: 1.4;
+      position: relative;
+      word-wrap: break-word;
+      border: 1px solid rgba(0, 255, 255, 0.2);
+    }
+    .received { 
+      background: rgba(84, 176, 176, 0.1); 
+      align-self: flex-start; 
+      color: rgb(238, 243, 243);
+    }
+    .sent { 
+      background: rgba(96, 188, 188, 0.2); 
+      align-self: flex-end; 
+      color: #fff;
+    }
+    .metadata {
+      font-size: 12px;
+      color: #0af;
+      position: absolute;
+      bottom: -18px;
+      right: 8px;
+    }
+    .message img, .message video {
+      max-width: 200px;
+      border-radius: 8px;
+      margin-top: 8px;
+      display: block;
+    }
+    /* Chat Input Area */
+    .chat-input {
+      display: flex;
+      flex-direction: column;
+      margin-top: 10px;
+      padding: 10px 20px;
+      background: rgba(0, 0, 0, 0.7);
+      border: 1px solid rgba(89, 175, 175, 0.2);
+      border-radius: 30px;
+    }
+    .input-wrapper {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .chat-input input {
+      flex: 1;
+      padding: 10px;
+      font-size: 14px;
+      border: none;
+      outline: none;
+      background: transparent;
+      color: rgb(237, 239, 239);
+    }
+    .chat-input button {
+      background: none;
+      border: none;
+      font-size: 20px;
+      color: #0ff;
+      cursor: pointer;
+      transition: color 0.2s;
+    }
+    .chat-input button:hover { 
+      color: #fff; 
+    }
+    .mic-btn.recording { 
+      color: red; 
+    }
+    .emoji-picker {
+      position: absolute; 
+      bottom: 70px;
+      left: 20px;
+      background: rgba(0, 0, 0, 0.9);
+      border: 1px solid rgba(0, 255, 255, 0.3);
+      border-radius: 15px;
+      padding: 10px;
+      display: none;
+      width: 220px;
+      box-shadow: 0 4px 16px rgba(0,255,255,0.3);
+      z-index: 1000;
+    }
+    .emoji-picker span {
+      cursor: pointer;
+      font-size: 24px;
+      margin: 8px;
+      transition: transform 0.1s;
+      color: #0ff;
+    }
+    .emoji-picker span:hover { 
+      transform: scale(1.2); 
+      color: #fff;
+    }
+    #filePreviewArea, #recordingPreviewArea {
+      margin: 10px 0;
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .file-preview {
+      background: rgba(0, 0, 0, 0.8);
+      padding: 5px 10px;
+      border-radius: 8px;
+      font-size: 12px;
+      color: #0ff;
+      border: 1px solid rgba(0,255,255,0.3);
+    }
+    /* Modal Styles */
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 2000;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      overflow: auto;
+      background: rgba(0,0,0,0.8);
+      backdrop-filter: blur(5px);
+    }
+    .modal-content {
+      background: rgba(0, 0, 0, 0.8);
+      border: 1px solid rgba(0,255,255,0.3);
+      border-radius: 15px;
+      padding: 20px;
+      width: 90%;
+      max-width: 400px;
+      margin: 10% auto;
+      color: #0ff;
+      position: relative;
+      backdrop-filter: blur(8px);
+    }
+    .modal-content h2, .modal-content h3 { 
+      margin-bottom: 10px; 
+    }
+    .modal-content label { 
+      display: block; 
+      margin-bottom: 5px; 
+    }
+    .modal-content input[type="text"],
+    .modal-content input[type="file"],
+    .modal-content textarea {
+      width: 100%;
+      padding: 8px;
+      margin-bottom: 15px;
+      border: 1px solid rgba(0,255,255,0.3);
+      border-radius: 8px;
+      background: transparent;
+      color: white !important;
+    }
+    .modal-content button {
+      background-color: #0ff;
+      color: #000;
+      border: none;
+      padding: 10px 15px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: bold;
+      transition: background 0.3s;
+    }
+    .modal-content button:hover { 
+      background-color: #0cc; 
+    }
+    .close { 
+      color: #0af; 
+      float: right; 
+      font-size: 28px; 
+      font-weight: bold; 
+      cursor: pointer; 
+    }
+    .close:hover { 
+      color: #fff; 
+    }
+    /* Scrollbar */
+    ::-webkit-scrollbar { width: 8px; }
+    ::-webkit-scrollbar-track { background: rgba(12, 198, 227, 0.6); }
+    ::-webkit-scrollbar-thumb { background: black; border-radius: 4px; }
+    
+    /* 
+      2) Make Group Member Name and Description in WHITE. 
+      We'll override color in the #groupMembers and #groupDescription specifically.
+    */
+    #groupMembers {
+      color: #fff;
+    }
+    #groupDescription {
+      color: #fff;
+    }
+    
+    .media-preview-content {
+      position: relative;
+      max-width: 90%;
+      max-height: 90%;
+    }
+    
+    .preview-media {
+      max-height: 80vh;
+      max-width: 90vw;
+      object-fit: contain;
+    }
+    
+    .close-preview {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      background: transparent;
+      border: none;
+      color: white;
+      font-size: 40px;
+      cursor: pointer;
+    }
+    
+  </style>
+</head>
+<body>
+   <!-- Upper Navigation - Same as home.html -->
+   <div class="upper-nav">
+    <div class="brand">
+      <img src="l11.jpg" alt="Logo" class="logo" />
+      <span>UniVerse</span>
+    </div>
+  </div>
+  <!-- Side Navigation - Same as home.html -->
+  <div class="side-nav">
+    <a href="home.html" title="Home" class="nav-item" id="homeLink">
+      <i class="fas fa-home"></i>
+      <span>Home</span>
+    </a>
+    <a href="home.html" title="Home" class="nav-item" id="homeLink">
+      <i class="fas fa-home"></i>
+      <span>Home</span>
+    </a>
+    <a href="search.html" title="Find" class="nav-item">
+      <i class="fas fa-search"></i>
+      <span>Find</span>
+    </a>
+    <a href="chat.html" title="Gossips" class="nav-item">
+      <i class="fas fa-comments"></i>
+      <span>Gossips</span>
+    </a>
+    <a href="reel.html" title="Snippets" class="nav-item">
+      <i class="fas fa-clapperboard"></i>
+      <span>Snippets</span>
+    </a>
+    <a href="profile.html" title="Profile" class="nav-item">
+      <i class="fas fa-user-circle"></i>
+      <span>Profile</span>
+    </a>
+    <a href="bookmark.html" title="Highlights" class="nav-item">
+      <i class="fas fa-bookmark"></i>
+      <span>Highlights</span>
+    </a>
+    <a href="archive.html" title="Archive" class="nav-item">
+      <i class="fas fa-box-archive"></i>
+      <span>Archive</span>
+    </a>
+    <a href="notes.html" title="Notes" class="nav-item">
+      <i class="fas fa-file-alt"></i>
+      <span>Notes</span>
+    </a>
+  </div>
+  
+
+  <div class="container-whatsapp">
+    <!-- LEFT SIDEBAR -->
+    <div class="sidebar">
+      <div class="sidebar-header">
+        <div class="user-details">
+          <img class="avatar" src="chat.jpg" alt="User Avatar">
+        </div>
+        <div class="sidebar-icons">
+          <a href="#" id="newGroupIcon" title="New Group"><i class="fas fa-users"></i></a>
+        </div>
+      </div>
+      <div class="search-bar">
+        <i class="fas fa-search"></i>
+        <input type="text" id="searchInput" placeholder="Search or start new chat...">
+      </div>
+      <div class="chat-list" id="chatList"></div>
+    </div>
+    <!-- RIGHT CHAT AREA -->
+    <div class="chat-area">
+      <div class="chat-area-header">
+        <div class="contact-info">
+          <img class="avatar" id="chatAvatar" src="https://via.placeholder.com/40" alt="Contact Avatar">
+          <span class="contact-name" id="chatName">Select a chat</span>
+        </div>
+        <div class="chat-area-icons">
+          <a href="#" id="groupInfoBtn" title="Group Info" style="display:none;"><i class="fas fa-info-circle"></i></a>
+        </div>
+      </div>
+      <div class="chat-messages" id="chatMessages"></div>
+      <!-- CHAT INPUT AREA -->
+      <div class="chat-input">
+        <div class="input-wrapper">
+          <button class="emoji-btn" id="emojiBtn" title="Emojis"><i class="far fa-smile"></i></button>
+          <button class="attach-btn" id="attachBtn" title="Attach File"><i class="fas fa-paperclip"></i></button>
+          <input type="file" id="fileInput" multiple style="display: none;" />
+          <button class="mic-btn" id="micBtn" title="Record Audio"><i class="fas fa-microphone"></i></button>
+        </div>
+        <div class="input-wrapper" style="position: relative; width: 100%;">
+          <input type="text" id="messageInput" placeholder="Type a message...">
+          <button class="send-btn" id="sendBtn" title="Send"><i class="fas fa-paper-plane"></i></button>
+          <!-- Emoji Picker (positioned absolutely) -->
+          <div class="emoji-picker" id="emojiPicker">
+            <span onclick="appendEmoji('😀')">😀</span>
+            <span onclick="appendEmoji('😂')">😂</span>
+            <span onclick="appendEmoji('😍')">😍</span>
+            <span onclick="appendEmoji('😎')">😎</span>
+            <span onclick="appendEmoji('👍')">👍</span>
+            <span onclick="appendEmoji('❤️')">❤️</span>
+            <span onclick="appendEmoji('🎉')">🎉</span>
+          </div>
+        </div>
+        <!-- Preview Areas -->
+        <div id="filePreviewArea"></div>
+        <div id="recordingPreviewArea"></div>
+      </div>
+    </div>
+  </div>
+  <!-- NEW GROUP MODAL -->
+  <div id="newGroupModal" class="modal">
+    <div class="modal-content">
+      <span class="close" id="closeNewModal">&times;</span>
+      <h2>Create New Group</h2>
+      <label for="groupName">Group Name: <small>(required)</small></label>
+      <input type="text" id="groupName" placeholder="Enter group name...">
+      <!-- 3) Add a description option in the Create Group modal -->
+      <label for="groupDesc">Group Description: <small>(optional)</small></label>
+      <textarea id="groupDesc" rows="3" placeholder="Enter group description..."></textarea>
+      
+      <label for="groupImage">Group Image: <small>(optional)</small></label>
+      <input type="file" id="groupImage" accept="image/*">
+      <h3>Select Members <small>(optional)</small></h3>
+      <div id="followingList">No users available.</div>
+      <button id="createGroupBtn">Create Group</button>
+    </div>
+  </div>
+  <!-- EDIT GROUP MODAL (Edit Profile) -->
+  <div id="editGroupModal" class="modal">
+    <div class="modal-content">
+      <span class="close" id="closeEditModal">&times;</span>
+      <h2>Edit Profile</h2>
+      <label for="editGroupName">Group Name:</label>
+      <input type="text" id="editGroupName" placeholder="Enter new group name...">
+      <label for="editGroupImage">Group Image (optional):</label>
+      <input type="file" id="editGroupImage" accept="image/*">
+      <label for="editGroupDescription">Group Description (optional):</label>
+      <textarea id="editGroupDescription" placeholder="Enter group description..."></textarea>
+      <button id="saveGroupChangesBtn">Save Changes</button>
+    </div>
+  </div>
+  <!-- ADD MEMBERS MODAL -->
+  <div id="addMembersModal" class="modal">
+    <div class="modal-content">
+      <span class="close" id="closeAddMembersModal">&times;</span>
+      <h2>Add Members</h2>
+      <div id="addMembersList">No available members.</div>
+      <button id="saveNewMembersBtn">Add Selected Members</button>
+    </div>
+  </div>
+  <!-- GROUP INFO MODAL -->
+  <div id="groupInfoModal" class="modal">
+    <div class="modal-content">
+      <span class="close" id="closeGroupInfoModal">&times;</span>
+      <h2>Group Info</h2>
+      
+      <h3>Members</h3>
+      <div id="groupMembers">No members added.</div>
+      
+      <!-- 1) Removed the Documents Section (and search doc fields) entirely. -->
+      
+      <h3>Description</h3>
+      <div id="groupDescription">No description available.</div>
+      
+      <button id="editProfileBtn">Edit Profile</button>
+      <button id="addMemberBtn">Add Members</button>
+      
+      <!-- 4) Provide a delete option for the group -->
+      <button id="deleteGroupBtn" style="margin-top:10px; background:#f00; color:#fff;">Delete Group</button>
+    </div>
+  </div>
+  <script>
+    
+    // --- Global Variables ---
+    let currentChatSearchQuery = "";
+    let draftFiles = [];
+    let draftRecordingBlob = null;
+    let currentChatId = null;
+    let currentMessages = [];
+    
+    // For voice recording
+    let isRecording = false;
+    let mediaRecorder;
+    let recordedChunks = [];
+    let recordingStartTime = 0;
+    
+    // Dummy data
+    const realUsers = [
+      { id: "user_1", name: "Yash", avatar: "https://via.placeholder.com/40/FF5733/FFF?text=A" },
+      { id: "user_2", name: "Rohan", avatar: "https://via.placeholder.com/40/33C1FF/FFF?text=B" }
+    ];
+    window.allChats = []; 
+    window.allMessages = {};
+    
+    document.addEventListener('DOMContentLoaded', () => {
+      displayChats(window.allChats);
+      
+      document.getElementById('searchInput').addEventListener('input', (e) => {
+        filterChatsByName(e.target.value.toLowerCase());
+      });
+      
+      document.getElementById('sendBtn').addEventListener('click', sendMessage);
+      document.getElementById('messageInput').addEventListener('keyup', (e) => {
+        if (e.key === 'Enter') sendMessage();
+      });
+      
+      document.getElementById('emojiBtn').addEventListener('click', () => {
+        const emojiPicker = document.getElementById('emojiPicker');
+        emojiPicker.style.display = (emojiPicker.style.display === 'block') ? 'none' : 'block';
+      });
+      
+      document.getElementById('attachBtn').addEventListener('click', () => {
+        document.getElementById('fileInput').click();
+      });
+      document.getElementById('fileInput').addEventListener('change', handleFileChange);
+      
+      document.getElementById('micBtn').addEventListener('click', handleMicClick);
+      
+      // Existing modal openers
+      document.getElementById('addMemberBtn').addEventListener('click', openAddMembersModal);
+      document.getElementById('editProfileBtn').addEventListener('click', openEditGroupModal);
+      document.getElementById('groupInfoBtn').addEventListener('click', openGroupInfoModal);
+      document.getElementById('deleteGroupBtn').addEventListener('click', deleteCurrentGroup);
+      
+      // NEW EVENT LISTENERS FOR MODALS:
+      document.getElementById('closeGroupInfoModal').addEventListener('click', () => {
+          document.getElementById("groupInfoModal").style.display = "none";
+      });
+      document.getElementById('closeEditModal').addEventListener('click', () => {
+          document.getElementById("editGroupModal").style.display = "none";
+      });
+      document.getElementById('closeAddMembersModal').addEventListener('click', () => {
+          document.getElementById("addMembersModal").style.display = "none";
+      });
+      document.getElementById('saveGroupChangesBtn').addEventListener('click', saveGroupChanges);
+      document.getElementById('saveNewMembersBtn').addEventListener('click', saveNewMembers);
+      
+      // --- Group Info Modal (delete + display description) ---
+      function openGroupInfoModal() {
+        const groupInfoModal = document.getElementById("groupInfoModal");
+        groupInfoModal.style.display = "block";
+        const chat = window.allChats.find(c => c.id === currentChatId);
+        if (chat) {
+          // Show members
+          const membersInfo = chat.members.map(memberId => {
+            const member = realUsers.find(u => u.id === memberId);
+            return member ? member.name : memberId;
+          });
+          document.getElementById("groupMembers").innerHTML = membersInfo.length > 0 ? membersInfo.join(", ") : "No members added.";
+          
+          // Show description
+          document.getElementById("groupDescription").innerHTML = chat.description ? chat.description : "No description available.";
+        }
+      }
+      /* 4) Delete option for the group inside group info */
+      function deleteCurrentGroup() {
+        if (!currentChatId) return;
+        const chat = window.allChats.find(c => c.id === currentChatId);
+        if (!chat) return;
+        if (confirm(`Are you sure you want to delete the group "${chat.name}"?`)) {
+          deleteChat(currentChatId);
+          document.getElementById("groupInfoModal").style.display = "none";
+        }
+      }
+      
+      // --- Edit Group Modal ---
+      function openEditGroupModal() {
+        document.getElementById('groupInfoModal').style.display = 'none';
+        const editModal = document.getElementById("editGroupModal");
+        editModal.style.display = "block";
+        const chat = window.allChats.find(c => c.id === currentChatId);
+        if (chat) {
+          document.getElementById("editGroupName").value = chat.name;
+          document.getElementById("editGroupImage").value = "";
+          document.getElementById("editGroupDescription").value = chat.description || "";
+        }
+      }
+      function saveGroupChanges() {
+        const chat = window.allChats.find(c => c.id === currentChatId);
+        if (!chat) return;
+        
+        const newName = document.getElementById("editGroupName").value.trim();
+        if (newName) { 
+          chat.name = newName; 
+        }
+        const newDesc = document.getElementById("editGroupDescription").value.trim();
+        chat.description = newDesc;
+        
+        const fileInput = document.getElementById("editGroupImage");
+        if (fileInput.files && fileInput.files[0]) {
+          const file = fileInput.files[0];
+          const reader = new FileReader();
+          reader.onload = function(e) {
+            chat.avatar = e.target.result;
+            updateUIAfterEdit();
+          };
+          reader.readAsDataURL(file);
+        } else {
+          updateUIAfterEdit();
+        }
+        document.getElementById("editGroupModal").style.display = "none";
+      }
+      function updateUIAfterEdit() {
+        const chat = window.allChats.find(c => c.id === currentChatId);
+        document.getElementById("chatName").textContent = chat.name;
+        document.getElementById("chatAvatar").src = chat.avatar;
+        displayChats(window.allChats);
+      }
+      
+      // --- Add Members ---
+      function openAddMembersModal() {
+        document.getElementById('groupInfoModal').style.display = 'none';
+        const addModal = document.getElementById("addMembersModal");
+        addModal.style.display = "block";
+        const chat = window.allChats.find(c => c.id === currentChatId);
+        const addListContainer = document.getElementById("addMembersList");
+        addListContainer.innerHTML = "";
+        const availableMembers = realUsers.filter(u => !chat.members.includes(u.id));
+        if (availableMembers.length === 0) {
+          addListContainer.innerHTML = "No new members available.";
+        } else {
+          availableMembers.forEach(user => {
+            const label = document.createElement("label");
+            label.innerHTML = `<input type="checkbox" value="${user.id}"> ${user.name}`;
+            addListContainer.appendChild(label);
+          });
+        }
+      }
+      function saveNewMembers() {
+        const chat = window.allChats.find(c => c.id === currentChatId);
+        if (!chat) return;
+        const checkboxes = document.querySelectorAll("#addMembersList input[type='checkbox']:checked");
+        checkboxes.forEach(chk => { 
+          if (!chat.members.includes(chk.value)) { 
+            chat.members.push(chk.value); 
+          } 
+        });
+        document.getElementById("addMembersModal").style.display = "none";
+        alert("Members added successfully.");
+      }    
+      // 2. Full preview for images/videos
+      document.addEventListener('click', function(e) {
+        // Handle only message images/videos
+        if(e.target.matches('.chat-messages img, .chat-messages video')) {
+          e.stopPropagation(); // Prevent event bubbling
+          
+          const src = e.target.src;
+          const preview = document.createElement('div');
+          preview.className = 'media-preview-overlay';
+          
+          preview.innerHTML = `
+            <div class="media-preview-content">
+              <img src="${src}" class="preview-media">
+              <button class="close-preview">&times;</button>
+            </div>
+          `;
+      
+          // Style the preview
+          preview.style.cssText = `
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.9);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+          `;
+      
+          // Close functionality
+          preview.querySelector('.close-preview').onclick = () => preview.remove();
+          preview.onclick = (e) => {
+            if(e.target === preview) preview.remove();
+          };
+      
+          document.body.appendChild(preview);
+        }
+      });
+      
+    });
+     
+      // New Group Modal
+      const newGroupIcon = document.getElementById('newGroupIcon');
+      const newGroupModal = document.getElementById('newGroupModal');
+      newGroupIcon.addEventListener('click', (e) => {
+        e.preventDefault();
+        loadFollowingList();
+        newGroupModal.style.display = 'block';
+      });
+      document.getElementById('closeNewModal').addEventListener('click', () => {
+        newGroupModal.style.display = 'none';
+      });
+      window.addEventListener('click', (e) => { 
+        if (e.target === newGroupModal) newGroupModal.style.display = 'none'; 
+      });
+      document.getElementById('createGroupBtn').addEventListener('click', createGroup);
+       
+    // --- Display & Filtering Functions ---
+    function displayChats(chats) {
+      const chatList = document.getElementById('chatList');
+      chatList.innerHTML = '';
+      chats.forEach(chat => {
+        const item = document.createElement('div');
+        item.classList.add('chat-item');
+        // Highlight the active chat with a dark color
+        if(chat.id === currentChatId) {
+          item.classList.add('active');
+        }
+        item.innerHTML = `
+          <img src="${chat.avatar}" class="chat-avatar" alt="Avatar">
+          <div class="chat-info">
+            <div class="chat-name">${chat.name}</div>
+            <div class="chat-last-message">${chat.lastMessage || ''}</div>
+          </div>
+          <div class="chat-time">${chat.timestamp || ''}</div>
+        `;
+        item.addEventListener('click', () => { 
+          currentChatId = chat.id; 
+          loadMessages(chat); 
+          // Update highlighting when a chat is selected
+          displayChats(window.allChats);
+        });
+        item.addEventListener('dblclick', (e) => {
+          e.stopPropagation();
+          if (confirm("Are you sure you want to delete this chat?")) { 
+            deleteChat(chat.id); 
+          }
+        });
+        chatList.appendChild(item);
+      });
+    }
+    function filterChatsByName(query) {
+      const filtered = window.allChats.filter(chat => chat.name.toLowerCase().includes(query));
+      displayChats(filtered);
+    }
+    function loadMessages(chat) {
+      document.getElementById('chatName').textContent = chat.name;
+      document.getElementById('chatAvatar').src = chat.avatar || 'https://via.placeholder.com/40';
+      document.getElementById("groupInfoBtn").style.display = (chat.id.startsWith("group_") ? "inline-block" : "none");
+      const msgArray = window.allMessages[chat.id] || [];
+      currentMessages = msgArray;
+      displayMessages(msgArray);
+    }
+    function displayMessages(messages) {
+      const chatMessages = document.getElementById('chatMessages');
+      chatMessages.innerHTML = '';
+      messages.forEach(msg => {
+        const msgDiv = document.createElement('div');
+        const messageClass = (msg.sender === 'me') ? 'sent' : 'received';
+        msgDiv.classList.add('message', messageClass);
+        msgDiv.innerHTML = `${msg.content}<span class="metadata">${msg.timestamp}</span>`;
+        chatMessages.appendChild(msgDiv);
+      });
+      chatMessages.scrollTop = chatMessages.scrollHeight;
+    }
+    function deleteChat(chatId) {
+      window.allChats = window.allChats.filter(c => c.id !== chatId);
+      delete window.allMessages[chatId];
+      if (currentChatId === chatId) {
+        currentChatId = null;
+        document.getElementById('chatName').textContent = "Select a chat";
+        document.getElementById('chatAvatar').src = "https://via.placeholder.com/40";
+        document.getElementById('chatMessages').innerHTML = "";
+      }
+      displayChats(window.allChats);
+    }
+    
+    // --- Create Group (with Description) ---
+    function loadFollowingList() {
+      const listContainer = document.getElementById('followingList');
+      listContainer.innerHTML = '';
+      if (realUsers.length === 0) { 
+        listContainer.innerHTML = 'No users found.'; 
+      } else { 
+        realUsers.forEach(user => {
+          const label = document.createElement('label');
+          label.innerHTML = `<input type="checkbox" value="${user.id}"> ${user.name}`;
+          listContainer.appendChild(label);
+        });
+      }
+    }
+    function createGroup() {
+      const groupName = document.getElementById('groupName').value.trim();
+      const groupDescription = document.getElementById('groupDesc').value.trim();
+      const groupImageInput = document.getElementById('groupImage');
+      const selectedMembers = [];
+      document.querySelectorAll('#followingList input[type="checkbox"]:checked')
+              .forEach(chk => selectedMembers.push(chk.value));
+      
+      if (!groupName) { 
+        alert("Please enter a group name"); 
+        return; 
+      }
+      if (groupImageInput.files && groupImageInput.files[0]) {
+        const file = groupImageInput.files[0];
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          const imageDataUrl = e.target.result;
+          createNewGroupObject(groupName, groupDescription, imageDataUrl, selectedMembers);
+        };
+        reader.readAsDataURL(file);
+      } else {
+        createNewGroupObject(groupName, groupDescription, "https://via.placeholder.com/40", selectedMembers);
+      }
+    }
+    function createNewGroupObject(groupName, groupDesc, groupImageUrl, members) {
+      const groupId = "group_" + Date.now();
+      const newGroup = {
+         id: groupId,
+         name: groupName,
+         avatar: groupImageUrl,
+         description: groupDesc,
+         members,
+         lastMessage: "",
+         timestamp: new Date().toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'}),
+      };
+      window.allChats.push(newGroup);
+      window.allMessages[groupId] = [];
+      displayChats(window.allChats);
+      currentChatId = groupId;
+      loadMessages(newGroup);
+      
+      document.getElementById('groupName').value = "";
+      document.getElementById('groupDesc').value = "";
+      document.getElementById('groupImage').value = "";
+      document.querySelectorAll('#followingList input[type="checkbox"]').forEach(chk => chk.checked = false);
+      document.getElementById('newGroupModal').style.display = 'none';
+    }
+    
+    // --- Message Sending Function (Combined Draft) ---
+    function sendMessage() {
+      const input = document.getElementById('messageInput');
+      const textContent = input.value.trim();
+      let combinedContent = "";
+      
+      if (!currentChatId) return;
+      
+      // Add text
+      if (textContent) {
+        combinedContent += `<p>${textContent}</p>`;
+      }
+      // Append each file
+      draftFiles.forEach(file => {
+        const fileURL = URL.createObjectURL(file);
+        if (file.type.startsWith('image/')) { 
+          combinedContent += `<p><img src="${fileURL}" alt="${file.name}" style="max-width:200px;"></p>`; 
+        } else if (file.type.startsWith('video/')) { 
+          combinedContent += `<p><video src="${fileURL}" controls style="max-width:200px;"></video></p>`; 
+        } else { 
+          combinedContent += `<p>File: <a href="${fileURL}" target="_blank">${file.name}</a></p>`; 
+        }
+      });
+      // Voice recording
+      if (draftRecordingBlob) {
+        const audioURL = URL.createObjectURL(draftRecordingBlob);
+        combinedContent += `<p><audio controls src="${audioURL}"></audio></p>`;
+      }
+      
+      if (!combinedContent.trim()) return;
+      
+      const newMessage = { 
+        sender: 'me', 
+        content: combinedContent, 
+        timestamp: new Date().toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'})
+      };
+      if (!window.allMessages[currentChatId]) { 
+        window.allMessages[currentChatId] = []; 
+      }
+      window.allMessages[currentChatId].push(newMessage);
+      const chat = window.allChats.find(c => c.id === currentChatId);
+      if (chat) {
+        chat.lastMessage = textContent ? textContent : "Sent a message";
+        chat.timestamp = newMessage.timestamp;
+      }
+      displayMessages(window.allMessages[currentChatId]);
+      displayChats(window.allChats);
+      input.value = '';
+      draftFiles = [];
+      draftRecordingBlob = null;
+      clearFilePreview();
+      clearRecordingPreview();
+    }
+    
+    // --- Emoji ---
+    function appendEmoji(emoji) {
+      const messageInput = document.getElementById('messageInput');
+      messageInput.value += emoji;
+      messageInput.focus();
+    }
+    
+    // --- File Attachments ---
+    function handleFileChange(event) {
+      const files = event.target.files;
+      if (!files || !currentChatId) return;
+      for (let i = 0; i < files.length; i++) {
+        draftFiles.push(files[i]);
+        displayFilePreview(files[i]);
+      }
+      event.target.value = "";
+    }
+    function displayFilePreview(file) {
+      const previewArea = document.getElementById('filePreviewArea');
+      const fileDiv = document.createElement('div');
+      fileDiv.className = 'file-preview';
+      fileDiv.textContent = file.name;
+      previewArea.appendChild(fileDiv);
+    }
+    function clearFilePreview() {
+      const previewArea = document.getElementById('filePreviewArea');
+      if (previewArea) previewArea.innerHTML = '';
+    }
+    
+    // --- Voice Recording ---
+    async function startRecording() {
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+        mediaRecorder = new MediaRecorder(stream);
+        recordedChunks = [];
+        recordingStartTime = Date.now();
+        mediaRecorder.ondataavailable = event => {
+          if (event.data.size > 0) recordedChunks.push(event.data);
+        };
+        mediaRecorder.onstop = () => {
+          const duration = (Date.now() - recordingStartTime) / 1000;
+          if (duration < 1) {
+            alert('Recording too short; please record for at least 1 second.');
+            recordedChunks = [];
+            return;
+          }
+          draftRecordingBlob = new Blob(recordedChunks, { type: 'audio/webm' });
+          displayRecordingPreview(draftRecordingBlob);
+          recordedChunks = [];
+        };
+        mediaRecorder.start();
+        isRecording = true;
+        document.getElementById('micBtn').classList.add('recording');
+      } catch (err) {
+        console.error('Error accessing microphone:', err);
+      }
+    }
+    function stopRecording() {
+      if (mediaRecorder && isRecording) {
+        mediaRecorder.stop();
+        isRecording = false;
+        document.getElementById('micBtn').classList.remove('recording');
+      }
+    }
+    function handleMicClick() {
+      if (!isRecording) startRecording();
+      else stopRecording();
+    }
+    function displayRecordingPreview(blob) {
+      const previewArea = document.getElementById('recordingPreviewArea');
+      if (!previewArea) return;
+      previewArea.innerHTML = '';
+      const audioURL = URL.createObjectURL(blob);
+      const audioElem = document.createElement('audio');
+      audioElem.controls = true;
+      audioElem.src = audioURL;
+      previewArea.appendChild(audioElem);
+    }
+    function clearRecordingPreview() {
+      const previewArea = document.getElementById('recordingPreviewArea');
+      if (previewArea) { previewArea.innerHTML = ''; }
+    }
+  </script>
+</body>
+</html>

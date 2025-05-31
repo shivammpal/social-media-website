@@ -1,0 +1,873 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Universe - FE Notes</title>
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" />
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&family=Orbitron:wght@400;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg-main: #0e0e0e;
+      --glass-bg: rgba(255, 255, 255, 0.1);
+      --glass-border: rgba(255, 255, 255, 0.2);
+      --accent-color: #00ffff;
+      --shadow-color: rgba(0, 255, 255, 0.2);
+    }
+    body {
+      font-family: 'Roboto', sans-serif;
+      background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+      color: #ddd;
+      margin: 0;
+      padding: 0;
+      overflow-x: hidden;
+      position: relative;
+    }
+    body::before,
+    body::after {
+      content: "";
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -2;
+      opacity: 0.3;
+      background-repeat: no-repeat;
+      background-size: cover;
+      animation: animateBg 20s linear infinite;
+    }
+    body::before {
+      background: radial-gradient(circle at 30% 30%, rgba(0,255,255,0.2), transparent 70%);
+    }
+    body::after {
+      background: radial-gradient(circle at 70% 70%, rgba(255,0,255,0.2), transparent 70%);
+      animation-direction: reverse;
+    }
+    @keyframes animateBg {
+      0% { transform: translate(0,0); }
+      50% { transform: translate(-50px,50px); }
+      100% { transform: translate(0,0); }
+    }
+    .jarvis-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: -3;
+      background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='800' height='600' viewBox='0 0 800 600'><defs><pattern id='circuit' x='0' y='0' width='40' height='40' patternUnits='userSpaceOnUse'><path d='M0 20 L20 0 L40 20 L20 40 Z' fill='none' stroke='%2300ffff' stroke-width='0.5'/><path d='M20 0 L20 40' stroke='%2300ffff' stroke-width='0.5'/><path d='M0 20 L40 20' stroke='%2300ffff' stroke-width='0.5'/></pattern></defs><rect width='800' height='600' fill='url(%23circuit)'/></svg>") repeat;
+      animation: jarvisMove 15s linear infinite;
+      opacity: 0.5;
+    }
+    @keyframes jarvisMove {
+      0% { transform: translate(0, 0) scale(1); }
+      50% { transform: translate(-50px, 50px) scale(1.05); }
+      100% { transform: translate(0, 0) scale(1); }
+    }
+    .upper-nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      background: var(--bg-main);
+      padding: 10px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      z-index: 1200;
+      border-bottom: 1px solid var(--glass-border);
+    }
+    .upper-nav .brand {
+      display: flex;
+      align-items: center;
+    }
+    .upper-nav .brand img.logo {
+      width: 40px;
+      height: 40px;
+      margin-right: 8px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 1px solid #ccc;
+      filter: drop-shadow(0 0 3px var(--accent-color));
+    }
+    .upper-nav .brand span {
+      font-family: 'Orbitron', sans-serif;
+      color: var(--accent-color);
+      font-size: 1.2rem;
+      font-weight: 700;
+      text-shadow: 0 0 8px var(--accent-color);
+    }
+    .upper-nav .nav-links {
+      display: flex;
+      align-items: center;
+    }
+    .upper-nav .nav-links a {
+      color: var(--accent-color);
+      font-size: 1.5rem;
+      text-decoration: none;
+      margin: 0 15px;
+      transition: color 0.3s ease;
+    }
+    .upper-nav .nav-links a:hover {
+      color: #fff;
+    }
+    .college-info {
+      display: inline-flex;
+      align-items: center;
+      background: var(--glass-bg);
+      padding: 4px 8px;
+      border-radius: 4px;
+      border: 1px solid var(--glass-border);
+      backdrop-filter: blur(5px);
+    }
+    .college-info #collegeNameDisplay {
+      font-weight: 500;
+      margin-left: 5px;
+      animation: colorChange 3s infinite;
+    }
+    @keyframes colorChange {
+      0%   { color: #00ffff; }
+      25%  { color: #ff00ff; }
+      50%  { color: #ffff00; }
+      75%  { color: #00ff00; }
+      100% { color: #00ffff; }
+    }
+    .side-nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 200px;
+      height: 100vh;
+      background: var(--bg-main);
+      border-radius: 0 15px 15px 0;
+      z-index: 1100;
+      padding: 20px 0;
+      overflow-y: auto;
+      border-right: 1px solid var(--glass-border);
+    }
+    .side-nav a.nav-item {
+      display: flex;
+      align-items: center;
+      text-decoration: none;
+      color: var(--accent-color);
+      font-size: 1rem;
+      padding: 10px 20px;
+      transition: background 0.3s ease, transform 0.3s ease;
+    }
+    .side-nav a.nav-item i {
+      font-size: 1.5rem;
+      min-width: 30px;
+      text-align: center;
+      margin-right: 15px;
+    }
+    .side-nav a.nav-item:hover {
+      background: rgba(0, 255, 255, 0.15);
+      transform: scale(1.05);
+      border-radius: 0 15px 15px 0;
+    }
+    .right-nav {
+      position: fixed;
+      top: 50%;
+      right: 10px;
+      transform: translateY(-50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      background: var(--glass-bg);
+      padding: 8px;
+      border-radius: 12px;
+      border: 1px solid var(--glass-border);
+      backdrop-filter: blur(5px);
+      z-index: 1100;
+      width: 160px;
+    }
+    .right-nav a.nav-item {
+      display: flex;
+      align-items: center;
+      text-decoration: none;
+      color: var(--accent-color);
+      font-size: 0.9rem;
+      padding: 8px 15px;
+      transition: all 0.3s ease;
+      margin: 4px 0;
+      border-radius: 12px;
+      width: 100%;
+      min-width: 100px;
+      white-space: nowrap;
+    }
+    .right-nav a.nav-item i {
+      font-size: 1.2rem;
+      margin-right: 8px;
+    }
+    .right-nav a.nav-item:hover {
+      background: rgba(0, 255, 255, 0.15);
+      transform: scale(1.03);
+      box-shadow: 0 0 8px var(--shadow-color);
+    }
+    @media (max-width: 768px) {
+      .right-nav {
+        width: 100px;
+        padding: 6px;
+      }
+      .right-nav a.nav-item {
+        font-size: 0.8rem;
+        padding: 6px 12px;
+      }
+      .right-nav a.nav-item i {
+        font-size: 1rem;
+        margin-right: 6px;
+      }
+    }
+    .main-container {
+      margin-top: 80px;
+      margin-left: 220px;
+      margin-right: 220px;
+      margin-bottom: 60px;
+      width: calc(100% - 220px - 190px);
+      background: rgba(14, 14, 14, 0.9);
+      border: 1px solid var(--accent-color);
+      border-radius: 15px;
+      box-shadow: 0 0 30px var(--shadow-color);
+      backdrop-filter: blur(10px);
+      padding: 20px;
+      min-height: calc(100vh - 120px);
+    }
+    .cyber-title {
+      font-family: 'Orbitron', sans-serif;
+      color: var(--accent-color);
+      text-shadow: 0 0 15px var(--shadow-color);
+      border-bottom: 2px solid var(--accent-color);
+      padding-bottom: 1rem;
+      margin-bottom: 2rem;
+    }
+    .notes-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1.5rem;
+      padding: 1rem;
+    }
+    .subject-card {
+      background: var(--glass-bg);
+      border: 1px solid var(--glass-border);
+      border-radius: 10px;
+      backdrop-filter: blur(10px);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      cursor: pointer;
+    }
+    .subject-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 0 25px var(--shadow-color);
+    }
+    .card-header {
+      padding: 1.5rem;
+      background: linear-gradient(135deg, rgba(0,255,255,0.1), rgba(255,0,255,0.1));
+      border-bottom: 1px solid var(--accent-color);
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+    .card-header h2 {
+      font-family: 'Orbitron', sans-serif;
+      color: var(--accent-color) !important;
+      font-size: 1.5rem;
+      text-shadow: 0 0 10px var(--shadow-color);
+      white-space: nowrap;
+      overflow: visible;
+    }
+    .cyber-icon {
+      color: var(--accent-color);
+      filter: drop-shadow(0 0 5px var(--shadow-color));
+    }
+    /* Improved modal chapter header style */
+    .modal-chapter h3 {
+      color: var(--accent-color);
+      font-family: 'Orbitron', sans-serif;
+      margin-bottom: 0.5rem;
+      padding: 0.75rem 1rem;
+      background: linear-gradient(135deg, rgba(0,255,255,0.15), rgba(255,0,255,0.15));
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+    .modal-chapter h3:hover {
+      background: linear-gradient(135deg, rgba(0,255,255,0.25), rgba(255,0,255,0.25));
+    }
+    .modal-chapter .notes-list {
+      display: none;
+      padding: 1rem;
+      gap: 0.75rem;
+    }
+    .note-item {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      padding: 1rem;
+      color: #fff;
+      border-radius: 5px;
+      background: rgba(255, 255, 255, 0.05);
+      transition: all 0.3s ease;
+      position: relative;
+    }
+    .note-item:hover {
+      background: rgba(0, 255, 255, 0.1);
+      transform: translateX(10px);
+      box-shadow: 0 0 15px var(--shadow-color);
+    }
+    .note-item i {
+      color: var(--accent-color);
+    }
+    .chapter-info {
+      font-size: 0.85rem;
+      color: #ccc;
+      margin-top: 5px;
+    }
+    .note-actions {
+      margin-top: 8px;
+      display: flex;
+      gap: 10px;
+    }
+    .note-actions button, .note-actions a {
+      background: var(--accent-color);
+      color: #000;
+      border: none;
+      padding: 5px 10px;
+      border-radius: 3px;
+      cursor: pointer;
+      font-size: 0.8rem;
+      text-decoration: none;
+      transition: background 0.3s;
+    }
+    .note-actions button:hover, .note-actions a:hover {
+      background: #00b3b3;
+    }
+    /* Modal styling using flex centering */
+    .cyber-modal {
+      display: none;
+      position: fixed;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.8);
+      backdrop-filter: blur(5px);
+      align-items: center;
+      justify-content: center;
+    }
+    .modal-content {
+      background: var(--bg-main);
+      padding: 20px;
+      border: 1px solid var(--accent-color);
+      width: 50%;
+      border-radius: 10px;
+      position: relative;
+      z-index: 10000;
+      max-height: 80vh;
+      overflow-y: auto;
+    }
+    .close {
+      color: var(--accent-color);
+      float: right;
+      font-size: 28px;
+      cursor: pointer;
+    }
+    .form-group {
+      margin-bottom: 1rem;
+    }
+    .cyber-input {
+      width: 100%;
+      padding: 10px;
+      color: #fff !important;
+      background-color: #2e2e2e !important;
+      border: 1px solid var(--accent-color);
+      border-radius: 5px;
+      margin-top: 5px;
+    }
+    .cyber-button {
+      background: var(--accent-color);
+      color: #000;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-family: 'Orbitron', sans-serif;
+      transition: all 0.3s ease;
+    }
+    .cyber-button:hover {
+      box-shadow: 0 0 15px var(--shadow-color);
+    }
+    /* New modal for viewing files inline */
+   /* ==== View‑Modal Fixes ==== */
+
+/* 1) Lighten the overlay behind the modal */
+#viewModal.cyber-modal {
+  background: rgba(0, 0, 0, 0.4) !important;
+  z-index: 2000;  /* make sure it’s on top of everything */
+}
+#viewModal .modal-content {
+  width: 80%;
+  background: transparent !important;
+border: none;            /* optional: remove the border */
+box-shadow: none;        
+  max-width: 900px;
+  padding: 0;
+  overflow: hidden;
+}
+#viewModal iframe {
+  width: 100%;
+  background: #fff;
+  height: 80vh;
+  border: none;
+}
+/* make the syllabus cells look clickable */
+.syllabus-table th {
+  font-family: 'Roboto', sans-serif;
+  cursor: pointer;
+  transition: background 0.3s, color 0.3s;
+}
+/* highlight the active semester */
+.syllabus-table .active {
+  background: var(--accent-color) !important;
+  color: #000 !important;
+}
+
+/* utility to hide the non‑active section */
+.hidden {
+  display: none;
+}
+
+
+  </style>
+</head>
+<body>
+  <div class="jarvis-overlay"></div>
+
+  <nav class="upper-nav">
+    <div class="brand">
+      <img src="l11.jpg" alt="Logo" class="logo" />
+      <span>UniVerse</span>
+    </div>
+    <div class="nav-links">
+      <a href="notification.html"><i class="fas fa-bell"></i></a>
+      <a href="profile.html"><i class="fas fa-user-circle"></i></a>
+      <span class="college-info">College: <span id="collegeNameDisplay"></span></span>
+    </div>
+  </nav>
+
+  <aside class="side-nav">
+    <a href="home.html" title="Home" class="nav-item">
+      <i class="fas fa-home"></i>
+      <span>Home</span>
+    </a>
+    <a href="home.html" class="nav-item"><i class="fas fa-home"></i><span>Home</span></a>
+    <a href="search.html" title="Find" class="nav-item">
+      <i class="fas fa-search"></i>
+      <span>Find</span>
+    </a>
+    <a href="chat.html" title="Gossips" class="nav-item">
+      <i class="fas fa-comments"></i>
+      <span>Gossips</span>
+    </a>
+    <a href="reel.html" title="Snippets" class="nav-item">
+      <i class="fas fa-clapperboard"></i>
+      <span>Snippets</span>
+    </a>
+    <a href="profile.html" title="Profile" class="nav-item">
+      <i class="fas fa-user-circle"></i>
+      <span>Profile</span>
+    </a>
+    <a href="bookmark.html" title="Highlights" class="nav-item">
+      <i class="fas fa-bookmark"></i>
+      <span>Highlights</span>
+    </a>
+    <a href="archive.html" title="Archive" class="nav-item">
+      <i class="fas fa-box-archive"></i>
+      <span>Archive</span>
+    </a>
+    <a href="notes.html" title="Notes" class="nav-item">
+      <i class="fas fa-file-alt"></i>
+      <span>Notes</span>
+    </a>
+  </aside>
+
+  <aside class="right-nav">
+    <a href="notes-fe.html" title="First Year Engineering" class="nav-item">
+      <i class="fas fa-graduation-cap"></i><span>FE</span>
+    </a>
+    <a href="notes-se.html" title="Second Year Engineering" class="nav-item">
+      <i class="fas fa-graduation-cap"></i><span>SE</span>
+    </a>
+    <a href="notes-te.html" title="Third Year Engineering" class="nav-item">
+      <i class="fas fa-graduation-cap"></i><span>TE</span>
+    </a>
+    <a href="notes-be.html" title="Bachelor Year Engineering" class="nav-item">
+      <i class="fas fa-graduation-cap"></i><span>BE</span>
+    </a>
+    <button class="upload-btn cyber-button" onclick="openUploadModal()">
+      <i class="fas fa-upload"></i> Upload Notes
+    </button>
+  </aside>
+  
+  <main class="main-container">
+    <h1>First Year Engineering Notes</h1>
+  
+    <!-- 1) Syllabus “tabs” -->
+    <div class="syllabus-section mb-5">
+      <h2 class="cyber-title">SEMEMSTER</h2>
+      <div class="table-responsive">
+        <table class="table table-dark table-bordered text-center syllabus-table">
+          <thead>
+            <tr>
+              <th id="syllCell1">SEMEMSTER I</th>
+              <th id="syllCell2">SEMEMSTER II</th>
+            </tr>
+          </thead>
+        </table>
+      </div>
+    </div>
+  
+    <!-- 2) Semester I Subjects -->
+    <div id="sem1Section" class="semester-section notes-grid">
+      <div class="subject-card">
+        <div class="card-header">
+          <i class="fas fa-calculator fa-fw cyber-icon"></i>
+          <h2>Mathematics</h2>
+        </div>
+      </div>
+      <div class="subject-card">
+        <div class="card-header">
+          <i class="fas fa-atom fa-fw cyber-icon"></i>
+          <h2>Physics</h2>
+        </div>
+      </div>
+      <div class="subject-card">
+        <div class="card-header">
+          <i class="fas fa-flask fa-fw cyber-icon"></i>
+          <h2>Chemistry</h2>
+        </div>
+      </div>
+    </div>
+  
+    <!-- 3) Semester II Subjects -->
+    <div id="sem2Section" class="semester-section notes-grid hidden">
+      <div class="subject-card">
+        <div class="card-header">
+          <i class="fas fa-code fa-fw cyber-icon"></i>
+          <h2>Programming</h2>
+        </div>
+      </div>
+    </div>
+  </main>
+  
+
+  <!-- Upload Modal -->
+  <div id="uploadModal" class="cyber-modal">
+    <div class="modal-content">
+      <span class="close" onclick="closeUploadModal()">&times;</span>
+      <h3>Upload Notes</h3>
+      <form id="uploadForm">
+        <div class="form-group">
+          <label>Subject:</label>
+          <select id="subjectSelect" class="cyber-input" required>
+            <option value="">Select Subject</option>
+            <option value="Mathematics">Mathematics</option>
+            <option value="Physics">Physics</option>
+            <option value="Chemistry">Chemistry</option>
+            <option value="Programming">Programming</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Chapter:</label>
+          <select id="chapterSelect" class="cyber-input" required>
+            <option value="">Select Chapter</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Chapter Details:</label>
+          <textarea id="chapterDetails" class="cyber-input" placeholder="Enter details about the chapter"></textarea>
+        </div>
+        <div class="form-group">
+          <label>Notes File:</label>
+          <input type="file" id="notesFile" class="cyber-input" accept=".pdf,.doc,.docx" required>
+        </div>
+        <button type="submit" class="cyber-button">
+          <i class="fas fa-upload"></i> Upload
+        </button>
+      </form>
+    </div>
+  </div>
+  
+  <!-- Subject Modal: Displays chapters and notes -->
+  <div id="subjectModal" class="cyber-modal">
+    <div class="modal-content">
+      <span class="close" onclick="closeSubjectModal()">&times;</span>
+      <h2 id="subjectModalTitle"></h2>
+      <div id="subjectModalContent"></div>
+    </div>
+  </div>
+  
+  <!-- New View Modal: For inline viewing of files -->
+  <div id="viewModal" class="cyber-modal">
+    <div class="modal-content">
+      <span class="close" onclick="closeViewModal()">&times;</span>
+      <iframe id="viewIframe" src=""></iframe>
+    </div>
+  </div>
+
+  <script>
+    // Mapping of subjects to chapters
+    const chapterMap = {
+      'Mathematics': ['Calculus', 'Linear Algebra', 'Differential Equations'],
+      'Physics': ['Mechanics', 'Electromagnetism', 'Thermodynamics'],
+      'Chemistry': ['Organic Chemistry', 'Inorganic Chemistry', 'Physical Chemistry'],
+      'Programming': ['Basic Python', 'C Programming', 'Data Structures']
+    };
+
+    document.addEventListener('DOMContentLoaded', () => {
+      // Set college name from localStorage (or default)
+      const name = localStorage.getItem('collegeName') || 'Unknown College';
+      document.getElementById('collegeNameDisplay').textContent = name;
+      
+      // Attach click listener on each subject card to open subject modal
+      document.querySelectorAll('.subject-card').forEach(card => {
+        card.addEventListener('click', function() {
+          const subject = this.querySelector('h2').textContent;
+          openSubjectModal(subject);
+        });
+      });
+
+      // Populate chapters for the upload modal when subject changes
+      const subjectSelect = document.getElementById('subjectSelect');
+      subjectSelect.addEventListener('change', function() {
+        const subject = this.value.trim();
+        const chapterSelect = document.getElementById('chapterSelect');
+        chapterSelect.innerHTML = '<option value="">Select Chapter</option>';
+        if (subject && chapterMap.hasOwnProperty(subject)) {
+          chapterMap[subject].forEach(chapter => {
+            const option = document.createElement('option');
+            option.value = chapter;
+            option.textContent = chapter;
+            chapterSelect.appendChild(option);
+          });
+        }
+      });
+      
+      // Toggle notes display when chapter header is clicked
+      document.addEventListener('click', function(e) {
+        if (e.target && e.target.matches('.modal-chapter h3')) {
+          const notesList = e.target.nextElementSibling;
+          notesList.style.display = notesList.style.display === "block" ? "none" : "block";
+        }
+      });
+    });
+
+    // Open Upload Modal
+    function openUploadModal() {
+      document.getElementById('uploadModal').style.display = 'flex';
+    }
+    
+    function closeUploadModal() {
+      document.getElementById('uploadModal').style.display = 'none';
+      document.getElementById('uploadForm').reset();
+    }
+    
+    // Upload form event listener – read file, store note (with dataUrl) then update UI
+    document.getElementById('uploadForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      
+      const subject = document.getElementById('subjectSelect').value;
+      const chapter = document.getElementById('chapterSelect').value;
+      const chapterDetails = document.getElementById('chapterDetails').value.trim();
+      const file = document.getElementById('notesFile').files[0];
+      
+      if (subject && chapter && file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          const dataUrl = e.target.result;
+          const note = {
+            subject,
+            chapter,
+            chapterDetails,
+            filename: file.name,
+            timestamp: new Date().toISOString(),
+            dataUrl: dataUrl
+          };
+          
+          // POST note to the server
+          fetch('http://localhost:4001/api/notes', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(note)
+          })
+          .then(response => response.json())
+          .then(data => {
+            if (data.success) {
+              alert('Notes uploaded successfully!');
+              const currentSubject = document.getElementById('subjectModalTitle').textContent;
+              if (currentSubject) updateSubjectModalContent(currentSubject);
+              closeUploadModal();
+            } else {
+              alert("Error uploading note.");
+            }
+          })
+          .catch(error => {
+            console.error("Error:", error);
+            alert("Error uploading note.");
+          });
+        };
+        reader.readAsDataURL(file);
+      }
+    });
+    
+    
+    
+    // Open subject modal and populate its content
+    function openSubjectModal(subject) {
+      document.getElementById('subjectModalTitle').textContent = subject;
+      updateSubjectModalContent(subject);
+      document.getElementById('subjectModal').style.display = 'flex';
+    }
+    
+    function closeSubjectModal() {
+      document.getElementById('subjectModal').style.display = 'none';
+    }
+    
+    // Update subject modal with chapters and corresponding notes
+    function updateSubjectModalContent(subject) {
+      const container = document.getElementById('subjectModalContent');
+      container.innerHTML = '';
+      
+      fetch(`http://localhost:4001/api/notes?subject=${encodeURIComponent(subject)}`)
+        .then(response => response.json())
+        .then(data => {
+          if (data.success && data.notes.length > 0) {
+            // Group notes by chapter if needed; here we assume each note has a "chapter" property
+            const chaptersNotes = {};
+            data.notes.forEach(note => {
+              if (!chaptersNotes[note.chapter]) chaptersNotes[note.chapter] = [];
+              chaptersNotes[note.chapter].push(note);
+            });
+            
+            // For each chapter in your defined map for this subject, build the UI
+            if (chapterMap[subject]) {
+              chapterMap[subject].forEach(chapter => {
+                const chapterSection = document.createElement('div');
+                chapterSection.className = 'modal-chapter';
+                chapterSection.innerHTML = `<h3>${chapter}</h3><div class="notes-list"></div>`;
+                const notesList = chapterSection.querySelector('.notes-list');
+                if (chaptersNotes[chapter]) {
+                  chaptersNotes[chapter].forEach(note => {
+                    const noteItem = document.createElement('div');
+                    noteItem.className = 'note-item';
+                    noteItem.innerHTML = `
+      <i class="fas fa-file"></i> ${note.filename}
+      <span class="date">${new Date(note.timestamp).toLocaleDateString()}</span>
+      ${note.chapterDetails ? `<p class="chapter-info">${note.chapterDetails}</p>` : ''}
+      <div class="note-actions">
+        <a href="${note.dataUrl}" download="${note.filename}">Download</a>
+        <button onclick="deleteNote('${note._id}', '${subject}')"><i class="fas fa-trash-alt"></i> Delete</button>
+      </div>
+                    `;
+                    notesList.appendChild(noteItem);
+                  });
+                }
+                container.appendChild(chapterSection);
+              });
+            } else {
+              container.innerHTML = '<p>No chapters available for this subject.</p>';
+            }
+          } else {
+            container.innerHTML = '<p>No notes available for this subject.</p>';
+          }
+        })
+        .catch(error => {
+          console.error(error);
+          container.innerHTML = '<p>Error loading notes.</p>';
+        });
+    }
+
+    // delete note
+    function deleteNote(noteId, subject) {
+      fetch(`http://localhost:4001/api/notes/${noteId}`, {
+        method: 'DELETE'
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.success) {
+          updateSubjectModalContent(subject);
+        } else {
+          alert("Error deleting note.");
+        }
+      })
+      .catch(error => {
+        console.error(error);
+        alert("Error deleting note.");
+      });
+    }
+    
+    
+    // Open view modal to display file inline using an iframe
+    function openViewModal(dataUrl, filename) {
+      const viewIframe = document.getElementById('viewIframe');
+      viewIframe.src = dataUrl;
+      document.getElementById('viewModal').style.display = 'flex';
+    }
+    
+    function closeViewModal() {
+      document.getElementById('viewModal').style.display = 'none';
+      document.getElementById('viewIframe').src = '';
+    }
+    
+    // Close modals when clicking outside the modal content
+    window.addEventListener('click', function(event) {
+      const uploadModal = document.getElementById('uploadModal');
+      const subjectModal = document.getElementById('subjectModal');
+      const viewModal = document.getElementById('viewModal');
+      if (event.target === uploadModal) {
+        closeUploadModal();
+      }
+      if (event.target === subjectModal) {
+        closeSubjectModal();
+      }
+      if (event.target === viewModal) {
+        closeViewModal();
+      }
+    });
+      // on page‑load, wire up clicks and default to Sem I
+      document.addEventListener('DOMContentLoaded', () => {
+        const cell1 = document.getElementById('syllCell1');
+        const cell2 = document.getElementById('syllCell2');
+        const sem1 = document.getElementById('sem1Section');
+        const sem2 = document.getElementById('sem2Section');
+    
+        function showSem(sem) {
+          if (sem === 1) {
+            sem1.classList.remove('hidden');
+            sem2.classList.add('hidden');
+            cell1.classList.add('active');
+            cell2.classList.remove('active');
+          } else {
+            sem2.classList.remove('hidden');
+            sem1.classList.add('hidden');
+            cell2.classList.add('active');
+            cell1.classList.remove('active');
+          }
+        }
+    
+        cell1.addEventListener('click', () => showSem(1));
+        cell2.addEventListener('click', () => showSem(2));
+    
+        // default view
+        showSem(1);
+      });
+   
+    
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

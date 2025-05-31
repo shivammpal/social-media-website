@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Universe - Archive</title>
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" />
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&family=Orbitron:wght@400;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+        --bg-main: #0e0e0e;
+        --glass-bg: rgba(255, 255, 255, 0.1);
+        --glass-border: rgba(255, 255, 255, 0.2);
+        --accent-color: #00ffff;
+        --shadow-color: rgba(0, 255, 255, 0.2);
+      }
+      /* Global Background with Animated Overlays */
+      body {
+        font-family: 'Roboto', sans-serif;
+        background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+        color: #ddd;
+        margin: 0;
+        padding: 0;
+        overflow-x: hidden;
+        position: relative;
+      }
+      body::before,
+      body::after {
+        content: "";
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: -2;
+        opacity: 0.3;
+        background-repeat: no-repeat;
+        background-size: cover;
+        animation: animateBg 20s linear infinite;
+      }
+      body::before {
+        background: radial-gradient(circle at 30% 30%, rgba(0,255,255,0.2), transparent 70%);
+      }
+      body::after {
+        background: radial-gradient(circle at 70% 70%, rgba(255,0,255,0.2), transparent 70%);
+        animation-direction: reverse;
+      }
+      @keyframes animateBg {
+        0% { transform: translate(0,0); }
+        50% { transform: translate(-50px,50px); }
+        100% { transform: translate(0,0); }
+      }
+      /* Jarvis-Inspired Overlay */
+      .jarvis-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+        z-index: -3;
+        background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='800' height='600' viewBox='0 0 800 600'><defs><pattern id='circuit' x='0' y='0' width='40' height='40' patternUnits='userSpaceOnUse'><path d='M0 20 L20 0 L40 20 L20 40 Z' fill='none' stroke='%2300ffff' stroke-width='0.5'/><path d='M20 0 L20 40' stroke='%2300ffff' stroke-width='0.5'/><path d='M0 20 L40 20' stroke='%2300ffff' stroke-width='0.5'/></pattern></defs><rect width='800' height='600' fill='url(%23circuit)'/></svg>") repeat;
+        animation: jarvisMove 15s linear infinite;
+        opacity: 0.5;
+      }
+      @keyframes jarvisMove {
+        0% { transform: translate(0, 0) scale(1); }
+        50% { transform: translate(-50px, 50px) scale(1.05); }
+        100% { transform: translate(0, 0) scale(1); }
+      }
+      /* Animation for changing color effect on college name */
+      @keyframes colorChange {
+        0%   { color: #00ffff; }
+        25%  { color: #ff00ff; }
+        50%  { color: #ffff00; }
+        75%  { color: #00ff00; }
+        100% { color: #00ffff; }
+      }
+     /* Upper Navigation Bar */
+     .upper-nav {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        background: rgba(14, 14, 14, 0.9);
+        padding: 10px 20px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        z-index: 1200;
+        border-bottom: 1px solid var(--glass-border);
+      }
+      .upper-nav .brand {
+        display: flex;
+        align-items: center;
+      }
+      .upper-nav .brand img.logo {
+        width: 40px;
+        height: 40px;
+        margin-right: 8px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 1px solid #ccc;
+        filter: drop-shadow(0 0 3px var(--accent-color));
+      }
+      .upper-nav .brand span {
+        font-family: 'Orbitron', sans-serif;
+        color: var(--accent-color);
+        font-size: 1.2rem;
+        font-weight: 700;
+        text-shadow: 0 0 8px var(--accent-color);
+      }
+      .upper-nav .nav-links {
+        display: flex;
+        align-items: center;
+      }
+      .upper-nav .nav-links a {
+        color: var(--accent-color);
+        font-size: 1.5rem;
+        text-decoration: none;
+        margin: 0 15px;
+        transition: color 0.3s ease;
+      }
+      .upper-nav .nav-links a:hover {
+        color: #fff;
+      }
+      .upper-nav {
+        background: var(--bg-main) !important;
+      }
+      .college-info {
+        display: inline-flex;
+        align-items: center;
+        background: var(--glass-bg);
+        padding: 4px 8px;
+        border-radius: 4px;
+        border: 1px solid var(--glass-border);
+        backdrop-filter: blur(5px);
+      }
+      .college-info #collegeNameDisplay {
+        font-weight: 500;
+        margin-left: 5px;
+        animation: colorChange 3s infinite;
+      }
+      /* Left Vertical Navigation Sidebar */
+      .side-nav {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 200px;
+        height: 100vh;
+        background: rgba(14, 14, 14, 0.85);
+        border-radius: 0 15px 15px 0;
+        z-index: 1100;
+        padding: 20px 0;
+        overflow-y: auto;
+        border-right: 1px solid var(--glass-border);
+      }
+      .side-nav a.nav-item {
+        display: flex;
+        align-items: center;
+        text-decoration: none;
+        color: var(--accent-color);
+        font-size: 1rem;
+        padding: 10px 20px;
+        transition: background 0.3s ease, transform 0.3s ease;
+      }
+      .side-nav a.nav-item i {
+        font-size: 1.5rem;
+        min-width: 30px;
+        text-align: center;
+        margin-right: 15px;
+      }
+      .side-nav a.nav-item:hover {
+        background: rgba(0, 255, 255, 0.15);
+        transform: scale(1.05);
+        border-radius: 0 15px 15px 0;
+      }
+      .side-nav a.nav-item:hover i {
+        filter: drop-shadow(0 0 8px var(--accent-color));
+      }
+      .side-nav {
+        background: var(--bg-main) !important;
+      }
+
+   
+    .archive-container {
+      margin-top: 80px;   /* space for upper nav */
+      margin-left: 200px; /* space for side nav */
+      margin-right: 20px;
+      margin-bottom: 60px;
+      padding: 20px;
+      max-width: 600px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    /* Post Styles */
+    .post {
+      background: var(--bg-main) !important;
+      padding: 15px;
+      border-radius: 10px;
+      box-shadow: 0 2px 15px var(--shadow-color);
+      margin-bottom: 20px;
+      border-color: var(--glass-border);
+      transition: transform 0.3s ease;
+    }
+    .post:hover { transform: translateY(-5px); }
+    .post-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+    .post-header .username { font-family: 'Orbitron', sans-serif; font-weight: 700; color: var(--accent-color); }
+    .post-actions i.remove-post { cursor: pointer; color: #ff4d4d; }
+    .post-actions i.remove-post:hover { color: #ff0000; transform: scale(1.2); }
+  </style>
+</head>
+<body>
+  <div class="jarvis-overlay"></div>
+ 
+  <!-- Upper Navigation Bar -->
+  <div class="upper-nav">
+    <div class="brand">
+      <img src="l11.jpg" alt="Logo" class="logo" />
+      <span>UniVerse</span>
+    </div>
+    <div class="nav-links">
+      <a href="notification.html" title="Notifications"><i class="fas fa-bell"></i></a>
+      <a href="profile.html" title="Profile"><i class="fas fa-user-circle"></i></a>
+      <span class="college-info">College: <span id="collegeNameDisplay"></span></span>
+    </div>
+  </div>
+
+  <!-- Sidebar -->
+  <div class="side-nav">
+    <a href="home.html" title="Home" class="nav-item" id="homeLink">
+      <i class="fas fa-home"></i>
+      <span>Home</span>
+    </a>
+    <a href="home.html" title="Home" class="nav-item" id="homeLink">
+      <i class="fas fa-home"></i>
+      <span>Home</span>
+    </a>
+    <a href="search.html" title="Find" class="nav-item">
+      <i class="fas fa-search"></i>
+      <span>Find</span>
+    </a>
+    <a href="chat.html" title="Gossips" class="nav-item">
+      <i class="fas fa-comments"></i>
+      <span>Gossips</span>
+    </a>
+    <a href="reel.html" title="Snippets" class="nav-item">
+      <i class="fas fa-clapperboard"></i>
+      <span>Snippets</span>
+    </a>
+    <a href="profile.html" title="Profile" class="nav-item">
+      <i class="fas fa-user-circle"></i>
+      <span>Profile</span>
+    </a>
+    <a href="bookmark.html" title="Highlights" class="nav-item">
+      <i class="fas fa-bookmark"></i>
+      <span>Highlights</span>
+    </a>
+    <a href="archive.html" title="Archive" class="nav-item">
+      <i class="fas fa-box-archive"></i>
+      <span>Archive</span>
+    </a>
+    <a href="notes.html" title="Notes" class="nav-item">
+      <i class="fas fa-file-alt"></i>
+      <span>Notes</span>
+    </a>
+    
+  </div>
+  <!-- Archive Content Container -->
+  <div class="archive-container">
+    <h2 class="text-center mb-4">Deleted Posts</h2>
+    <div id="archivePostsContainer"></div>
+  </div>
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const collegeName = localStorage.getItem("collegeName");
+      document.getElementById("collegeNameDisplay").textContent = collegeName || "Unknown College";
+  
+      const archiveContainer = document.getElementById("archivePostsContainer");
+      const archivedPosts = JSON.parse(localStorage.getItem("archivedPosts")) || [];
+  
+      if (archivedPosts.length === 0) {
+        archiveContainer.innerHTML = "<p class='text-center'>No deleted posts yet.</p>";
+      } else {
+        archivedPosts.forEach(post => {
+          archiveContainer.appendChild(renderArchivedPost(post));
+        });
+      }
+    });
+  
+    function renderArchivedPost(postObj) {
+      const post = document.createElement("div");
+      post.className = "post";
+      post.id = postObj.id;
+  
+      post.innerHTML = `
+        <div class="post-header d-flex justify-content-between">
+          <span class="username">@${postObj.username}</span>
+        </div>
+        <div class="post-media">
+          ${
+            postObj.mediaType && postObj.mediaType.startsWith("video")
+              ? `<video controls style="width: 100%;"><source src="${postObj.mediaURL}" type="${postObj.mediaType}"></video>`
+              : `<img src="${postObj.mediaURL}" style="width: 100%;" />`
+          }
+        </div>
+        <div class="post-caption"><p>${postObj.caption || ""}</p></div>
+        <div class="post-tags"><p>${postObj.tags || ""}</p></div>
+        <div class="post-actions d-flex justify-content-between align-items-center">
+          <div class="post-left-actions">
+            <i class="${postObj.liked ? 'fas' : 'far'} fa-heart me-2" style="color: ${postObj.liked ? 'red' : ''};"></i>
+            <i class="far fa-comment me-2"></i>
+            <i class="far fa-download me-2"></i>
+            <i class="far fa-share-square"></i>
+          </div>
+          <div class="post-right-action">
+            <button class="btn btn-sm btn-success me-2 back-post-btn" title="Back Post">Back Post</button>
+            <i class="fas fa-trash remove-post ms-3" title="Remove Post"></i>
+          </div>
+        </div>
+      `;
+  
+      post.querySelector(".remove-post").addEventListener("click", () => {
+        let archived = JSON.parse(localStorage.getItem("archivedPosts")) || [];
+        archived = archived.filter(p => p.id !== postObj.id);
+        localStorage.setItem("archivedPosts", JSON.stringify(archived));
+        post.remove();
+  
+        if (archived.length === 0) {
+          document.getElementById("archivePostsContainer").innerHTML = "<p class='text-center'>No deleted posts yet.</p>";
+        }
+      });
+
+      post.querySelector(".back-post-btn").addEventListener("click", async () => {
+        let archived = JSON.parse(localStorage.getItem("archivedPosts")) || [];
+        // Remove from archived
+        archived = archived.filter(p => p.id !== postObj.id);
+        localStorage.setItem("archivedPosts", JSON.stringify(archived));
+
+        // Send POST request to API to restore post
+        try {
+          // Add post to localStorage restoredPosts for immediate home page rendering
+          let restoredPosts = JSON.parse(localStorage.getItem("restoredPosts")) || [];
+          restoredPosts.push(postObj);
+          localStorage.setItem("restoredPosts", JSON.stringify(restoredPosts));
+
+          // Optionally still send POST request to API for persistence
+          await fetch('http://localhost:5500/posts', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              username: postObj.username,
+              mediaURL: postObj.mediaURL,
+              mediaType: postObj.mediaType,
+              caption: postObj.caption,
+              tags: postObj.tags,
+              liked: postObj.liked
+            })
+          });
+          post.remove();
+          if (archived.length === 0) {
+            document.getElementById("archivePostsContainer").innerHTML = "<p class='text-center'>No deleted posts yet.</p>";
+          }
+          // Redirect to home page to show updated posts
+          window.location.href = "home.html";
+        } catch (err) {
+          console.error("Error restoring post:", err);
+          alert("Failed to restore post. Please try again.");
+        }
+      });
+
+      return post;
+    }
+  </script>
+  
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
